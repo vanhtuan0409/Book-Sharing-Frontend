@@ -1,0 +1,21 @@
+<div class="comment">
+	
+	<div class="row" ng-repeat="comment in comments">
+		<div class="col l1">
+			<img ng-src="{{comment.avatar}}" alt="" class="circle responsive-img">
+		</div>
+		<div class="col l11">
+			<div><b>{{comment.name}}</b></div>
+			<div>{{comment.msg}}</div>
+		</div>
+	</div>
+
+	<div class="divider"></div>
+	<div class="input-field">
+		<input type="text" id="user-comment" placeholder="Post your comment">
+		<a href="" class="btn waves-effect">
+			<i class="material-icons left">send</i>
+			Send
+		</a>
+	</div>
+</div>

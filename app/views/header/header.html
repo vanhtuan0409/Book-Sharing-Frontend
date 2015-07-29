@@ -1,0 +1,30 @@
+<nav class="indigo">
+    <div class="nav-wrapper" id="header">
+        <a href="#/" id="brand-name">Book Sharing</a>
+        <div class="left">
+            <form>
+                <div class="input-field">
+                    <input type="search" placeholder="Explore Book Sharing" id="search-field" class="field" required maxlength="">
+                    <label for="search-field"><i class="mdi-action-search"></i></label>
+                </div>
+            </form>
+        </div>
+        <ul class="right">
+            <li style="position: relative;">
+                <a href="#/borrow">
+                    <i class="material-icons">notifications</i>
+                </a>
+                <div class="header-notify"></div>
+            </li>
+            <li>
+                <a id="user-header-dropdown-menu" class="dropdown-button" href="#/" data-activates="user-header-dropdown">
+                    Tuấn Vương<i class="material-icons right">arrow_drop_down</i>
+                </a>
+            </li>
+        </ul>
+        <ul id="user-header-dropdown" class="dropdown-content">
+            <li><a href="#/profile">View profile</a></li>
+            <li><a href="#!">Logout</a></li>
+        </ul>
+    </div>
+</nav>

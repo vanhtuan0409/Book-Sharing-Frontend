@@ -1,0 +1,191 @@
+<div class="container">
+	<div class="card-panel profile center-align">
+		<div class="">
+			<img src="img/avatar/the.jpg" alt="" class="responsive-img circle avatar">
+		</div>
+		<div class="">
+			<a href=""><i class="fa fa-facebook"></i></a>
+			<a href=""><i class="fa fa-twitter"></i></a>
+			<a href=""><i class="fa fa-link"></i></a>
+		</div>
+		<h1 style="font-size:30px"><a href="#/profile">Shiro</a></h1>
+		<div class="row">
+			<div class="col l2 offset-l5">
+				<a class="btn waves-effect">Follow</a>
+			</div>
+			<div class="col l3 offset-l2">
+				<a href="#/borrow" class="btn waves-effect">Manage your profile</a>
+			</div>
+		</div>
+		<div class="divider" style="margin-top: 15px;"></div>
+		<div class="row">
+			<div class="col l2">
+				<a href="#/profile">
+					<p style="font-size: 20px;">10</p>
+					<p><b>Book Owned</b></p>
+				</a>
+			</div>
+			<div class="col l2">
+				<a href="#/borrow">
+					<p style="font-size: 20px;">5</p>
+					<p><b>Book Borrow</b></p>
+				</a>
+			</div>
+			<div class="col l2">
+				<a href="#/lend">
+					<p style="font-size: 20px;">6</p>
+					<p><b>Book Lend</b></p>
+				</a>
+			</div>
+			<div class="col l2">
+				<a href="">
+					<p style="font-size: 20px;">100</p>
+					<p><b>Reputation</b></p>
+				</a>
+			</div>
+			<div class="col l2">
+				<a href="">
+					<p style="font-size: 20px;">2</p>
+					<p><b>Follower</b></p>
+				</a>
+			</div>
+			<div class="col l2">
+				<a href="">
+					<p style="font-size: 20px;">5</p>
+					<p><b>Following</b></p>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col l3">
+			<div class="card basic-information">
+				<div class="card-content">
+					<div class="card-title black-text">Information</div>
+					<div class="divider"></div>
+					<p><b>Name: </b>{{user.name}}</p>
+					<p><b>Location: </b>{{user.location}}</p>
+					<p><b>Reputation: </b>{{user.point}}</p>
+					<p><b>Prefer place: </b>{{user.placeToTrade.join(", ")}}</p>
+					<p><b>Prefer time: </b>{{user.timeToTrade.join(", ")}}</p>
+				</div>
+			</div>
+
+			<div class="card user-follower-information">
+				<div class="card-content">
+					<div class="card-title black-text">Follower</div>
+					<div class="divider"></div>
+				</div>
+			</div>
+
+			<div class="card user-following-information">
+				<div class="card-content">
+					<div class="card-title black-text">Following</div>
+					<div class="divider"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col l9">
+			<div class="card-panel">
+				<div class="row">
+					<ul class="tabs">
+						<li class="tab col s4"><a class="active black-text" href="#book">Books</a></li>
+						<li class="tab col s4"><a class="black-text" href="#recommendation">Recommendation</a></li>
+						<li class="tab col s4"><a class="black-text" href="#user-rating">User rating</a></li>
+					</ul>
+				</div>
+
+				<div id="book">
+					<table class="bordered centered responsive-table book-list">
+						<thead>
+							<tr>
+								<th>Book Cover</th>
+								<th>Book Name</th>
+								<th>Author</th>
+								<th>Published in</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<img src="img/book/book4.jpg" alt="" class="responsive-img">
+								</td>
+								<td>Rain Reign</td>
+								<td>Ann M.Martin</td>
+								<td>2014</td>
+								<td><button data-target="borrowPopup" class="btn waves-effect modal-trigger">Borrow</button></td>
+							</tr>
+							<tr>
+								<td>
+									<img src="img/book/book2.jpg" alt="" class="responsive-img">
+								</td>
+								<td>Nearly Gone</td>
+								<td>Elle Cosimano</td>
+								<td>2014</td>
+								<td><button data-target="borrowPopup" class="btn waves-effect modal-trigger">Borrow</button></td>
+							</tr>
+							<tr>
+								<td>
+									<img src="img/book/book3.jpg" alt="" class="responsive-img">
+								</td>
+								<td>The Art of Secrets</td>
+								<td>James Klise</td>
+								<td>2014</td>
+								<td><button data-target="borrowPopup" class="btn waves-effect modal-trigger">Borrow</button></td>
+							</tr>
+						</tbody>
+					</table>	
+				</div>
+				
+				<div id="recommendation">
+					<table class="bordered centered responsive-table book-list">
+						<thead>
+							<tr>
+								<th>Book Cover</th>
+								<th>Book Name</th>
+								<th>Author</th>
+								<th>Published in</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<img src="img/book/book1.jpg" alt="" class="responsive-img">
+								</td>
+								<td>Fake Id</td>
+								<td>Lamar Giles</td>
+								<td>2014</td>
+							</tr>
+							<tr>
+								<td>
+									<img src="img/book/book4.jpg" alt="" class="responsive-img">
+								</td>
+								<td>Rain Reign</td>
+								<td>Ann M.Martin</td>
+								<td>2014</td>
+							</tr>
+							<tr>
+								<td>
+									<img src="img/book/book5.jpg" alt="" class="responsive-img">
+								</td>
+								<td>Chocolate & Vicodin</td>
+								<td>Jennette Fulda</td>
+								<td>2011</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div id="user-rating">
+					<ng-comment comments="comments"></ng-comment>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="borrowPopup" class="modal"
+	ng-include="'views/borrow_form/borrow_form.html'" onload="jLoader.loadDatePicker();"></div>
