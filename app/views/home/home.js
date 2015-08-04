@@ -9,12 +9,26 @@ angular.module('myApp.home', [])
 	});
 }])
 
-.controller('HomeCtrl', ['$scope', '$jQueryLoader', function($scope, $jQueryLoader) {
+.controller('HomeCtrl', ['$scope', '$http', '$jQueryLoader', '$appConfig',
+	function($scope, $http, $jQueryLoader, $appConfig) {
 	$scope.jLoader = $jQueryLoader;
 
 	$scope.loadJquery = function(){
 		$jQueryLoader.loadTab();
 	}
-
 	$scope.loadJquery();
+
+	$scope.random = function(){
+		return Math.random();
+	}
+
+	$scope.getAllBook = function(){
+		$http.get($appConfig.API_URL+'/book')
+		.success(function(data){
+			if (!data.error){
+				$scope.books = data.content;
+			}
+		})
+	}
+	$scope.getAllBook();
 }]);

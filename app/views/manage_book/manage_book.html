@@ -1,0 +1,121 @@
+<div class="container">
+	<profile-banner user="user"></profile-banner>
+
+	<div class="row">
+		<div class="col l3">
+			<div class="card-panel sidebar">
+				<div class="sidebar-item"><a href="">Profile</a></div>
+				<div class="divider"></div>
+				<div class="sidebar-item active"><a href="#/manage-book">Book Manage</a></div>
+				<div class="divider"></div>
+				<div class="sidebar-item"><a href="#/borrow">Borrow Request</a></div>
+				<div class="divider"></div>
+				<div class="sidebar-item"><a href="#/lend">Lending Request</a></div>
+			</div>
+		</div>
+		<div class="col l9">
+			<div class="card-panel">
+				<div class="row">
+					<ul class="tabs">
+						<li class="tab col s6"><a class="active black-text" href="#book" ng-click="setMode(true);">Books</a></li>
+						<li class="tab col s6"><a class="black-text" href="#recommendation" ng-click="setMode(false);">Recommendation</a></li>
+					</ul>
+				</div>
+				<div id="book">
+					<table class="bordered centered responsive-table book-list">
+						<thead>
+							<tr>
+								<th>Book Cover</th>
+								<th>Book Name</th>
+								<th>Author</th>
+								<th>Type</th>
+								<th>
+									<a class="btn-floating waves-effect waves-light red lighten-2 modal-trigger" href="#addPopup" ng-click="setMode(true);"><i class="material-icons">add</i></a>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="book in userBooks | orderBy: 'bookname'">
+								<td  ng-click="redirect(book.id);">
+									<img ng-src="{{book.url}}" alt="" class="responsive-img">
+								</td>
+								<td  ng-click="redirect(book.id);">{{book.bookname}}</td>
+								<td  ng-click="redirect(book.id);">{{book.author.join(', ')}}</td>
+								<td  ng-click="redirect(book.id);">{{book.type}}</td>
+								<td>
+									<button class="btn red lighten-2 waves-effect" ng-click="removeBook(book.id, true);">
+										Remove
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>	
+				</div>
+				
+				<div id="recommendation">
+					<table class="bordered centered responsive-table book-list">
+						<thead>
+							<tr>
+								<th>Book Cover</th>
+								<th>Book Name</th>
+								<th>Author</th>
+								<th>Type</th>
+								<th>
+									<a class="btn-floating waves-effect waves-light red lighten-2 modal-trigger" href="#addPopup" ng-click="setMode(false);"><i class="material-icons">add</i></a>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="book in userRecommendation | orderBy: 'bookname'">
+								<td>
+									<img ng-src="{{book.url}}" alt="" class="responsive-img">
+								</td>
+								<td>{{book.bookname}}</td>
+								<td>{{book.author.join(', ')}}</td>
+								<td>{{book.type}}</td>
+								<td>
+									<button class="btn red lighten-2 waves-effect" ng-click="removeBook(book.id);">
+										Remove
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="addPopup" class="modal">
+		<div class="modal-content">
+			<h4 class="center-align">Add New Book</h4>
+
+			<form>
+				<div class="row">
+					<div class="input-field col l12">
+						<i class="mdi-action-search prefix"></i>
+						<input id="book-title" type="search" ng-model="searchString" ng-change="log();">
+						<label for="book-title">
+							Search for book title
+						</label>
+					</div>
+				</div>
+
+				<div>
+					{{results.length}} Result
+					<ul class="collection">
+						<li class="collection-item avatar" ng-repeat="result in results">
+							<img ng-src="{{result.volumeInfo.imageLinks.smallThumbnail}}" alt="" style="width:37px;border-radius:0px;" class="circle">
+							<span class="title"><b>{{result.volumeInfo.title | limitTo: 20}}</b></span>
+							<p>{{result.volumeInfo.authors.join(', ') | limitTo: 20}}</p>
+							<a class="btn waves-effect secondary-content" ng-click="addBook(result)">Add</a>
+						</li>
+					</ul>
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<a class="modal-action modal-close waves-effect waves-green btn">Cancel</a>
+		</div>
+	</div>
+</div>

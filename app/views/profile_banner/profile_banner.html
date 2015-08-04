@@ -1,0 +1,58 @@
+<div class="card-panel profile center-align">
+	<div class="">
+		<img ng-src="{{user.url}}" alt="" class="responsive-img circle avatar-img">
+	</div>
+	<div class="">
+		<a href=""><i class="fa fa-facebook"></i></a>
+		<a href=""><i class="fa fa-twitter"></i></a>
+		<a href=""><i class="fa fa-link"></i></a>
+	</div>
+	<h1 style="font-size:30px"><a href="#/profile/{{user.id}}">{{user.name}}</a></h1>
+	<div class="row">
+		<div class="col l2 offset-l5">
+			<a class="btn waves-effect">Follow</a>
+		</div>
+		<div class="col l3 offset-l2">
+			<a href="#/borrow" class="btn waves-effect">Manage your profile</a>
+		</div>
+	</div>
+	<div class="divider" style="margin-top: 15px;"></div>
+	<div class="row">
+		<div class="col l2">
+			<a href="#/profile">
+				<p style="font-size: 20px;">10</p>
+				<p><b>Book Owned</b></p>
+			</a>
+		</div>
+		<div class="col l2">
+			<a href="#/borrow">
+				<p style="font-size: 20px;">5</p>
+				<p><b>Book Borrow</b></p>
+			</a>
+		</div>
+		<div class="col l2">
+			<a href="#/lend">
+				<p style="font-size: 20px;">6</p>
+				<p><b>Book Lend</b></p>
+			</a>
+		</div>
+		<div class="col l2">
+			<a href="">
+				<p style="font-size: 20px;">100</p>
+				<p><b>Reputation</b></p>
+			</a>
+		</div>
+		<div class="col l2">
+			<a href="">
+				<p style="font-size: 20px;">2</p>
+				<p><b>Follower</b></p>
+			</a>
+		</div>
+		<div class="col l2">
+			<a href="">
+				<p style="font-size: 20px;">5</p>
+				<p><b>Following</b></p>
+			</a>
+		</div>
+	</div>
+</div>

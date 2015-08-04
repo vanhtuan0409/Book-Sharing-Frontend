@@ -1,106 +1,59 @@
 <div class="container">
-	<div class="card-panel profile center-align">
-		<div class="">
-			<img src="img/avatar/the.jpg" alt="" class="responsive-img circle avatar">
-		</div>
-		<div class="">
-			<a href=""><i class="fa fa-facebook"></i></a>
-			<a href=""><i class="fa fa-twitter"></i></a>
-			<a href=""><i class="fa fa-link"></i></a>
-		</div>
-		<h1 style="font-size:30px"><a href="#/profile">Shiro</a></h1>
-		<button class="btn waves-effect">Follow</button>
-		<div class="divider" style="margin-top: 15px;"></div>
-		<div class="row">
-			<div class="col l2">
-				<a href="#/profile">
-					<p style="font-size: 20px;">10</p>
-					<p><b>Book Owned</b></p>
-				</a>
-			</div>
-			<div class="col l2">
-				<a href="#/borrow">
-					<p style="font-size: 20px;">5</p>
-					<p><b>Book Borrow</b></p>
-				</a>
-			</div>
-			<div class="col l2">
-				<a href="#/lend">
-					<p style="font-size: 20px;">6</p>
-					<p><b>Book Lend</b></p>
-				</a>
-			</div>
-			<div class="col l2">
-				<a href="">
-					<p style="font-size: 20px;">100</p>
-					<p><b>Reputation</b></p>
-				</a>
-			</div>
-			<div class="col l2">
-				<a href="">
-					<p style="font-size: 20px;">2</p>
-					<p><b>Follower</b></p>
-				</a>
-			</div>
-			<div class="col l2">
-				<a href="">
-					<p style="font-size: 20px;">5</p>
-					<p><b>Following</b></p>
-				</a>
-			</div>
-		</div>
-	</div>
+	<profile-banner user="user"></profile-banner>
 
 	<div class="row">
 		<div class="col l3">
-			<div class="card-panel sidebar">
-				<div class="sidebar-item"><a href="">Profile</a></div>
-				<div class="divider"></div>
-				<div class="sidebar-item"><a href="">Book Manage</a></div>
-				<div class="divider"></div>
-				<div class="sidebar-item active"><a href="#/borrow">Borrow Request</a></div>
-				<div class="divider"></div>
-				<div class="sidebar-item"><a href="#/lend">Lending Request</a></div>
-			</div>
+			<ul class="collection">
+				<li class="collection-item avatar" ng-repeat="msg in msgList" ng-click="redirect(msg.id);">
+					<img ng-src="{{msg.toUser.url}}" alt="" class="circle" ng-if="msg.fromUser.id == user.id">
+					<img ng-src="{{msg.fromUser.url}}" alt="" class="circle" ng-if="msg.fromUser.id != user.id">
+					<span class="title"><b>{{msg.book.bookname}}</b></span>
+					<div ng-if="msg.fromUser.id == user.id">Borrow from {{msg.toUser.name}}</div>
+					<div ng-if="msg.fromUser.id != user.id">Lend to {{msg.fromUser.name}}</div>
+				</li>
+			</ul>
 		</div>
 		<div class="col l9">
 			<div class="card-panel">
 				<div class="row" style="margin-bottom:0px;">
 					<ul id="breadcrumb" class="left">
 						<li>
-							<a href="#/borrow">Borrow</a>
+							<div ng-switch on="borrowFlag">
+								<a ng-switch-when="true" href="#/borrow">Borrow</a>
+								<a ng-switch-when="false" href="#/lend">Lend</a>
+							</div>
 						</li>
 						<li>
-							<a href="">Lean Startup</a>
+							<a href="">{{request.book.bookname}}</a>
 						</li>
 					</ul>
-					<button class="btn waves-effect right red lighten-2" style="margin-top: 1em;">Close Request</button>
+					<button class="btn waves-effect right red lighten-2" style="margin-top: 1em;" ng-click="deleteRequest(request.id);" ng-if="request.status != 'closed'">Close</button>
+					<button class="btn waves-effect right" style="margin:1em 1em 0 0;" ng-click="acceptRequest(request.id)" ng-if="request.status == 'init'">Accept</button>
 				</div>
 				<div class="divider"></div>
 				<div class="row request-info" style="">
 					<div class="col l10">
-						<p><b>Kenji</b> want to borrow you the book <b>Lean Startup</b></p>
+						<div ng-switch on="borrowFlag">
+							<p ng-switch-when="true">You want to borrow from <img ng-src="{{request.toUser.url}}" alt="" class="circle" style="max-width:2em!important"> <b>{{request.toUser.name}}</b>({{request.toUser.email}}) the book <b>{{request.book.bookname}}</b></p>
+							<p ng-switch-when="false"><b>{{request.fromUser.name}}</b>({{request.fromUser.email}}) want to borrow your book <b>{{request.book.bookname}}</b></p>
+						</div>
 						<div class="row" style="margin-bottom: 0px;">
-							<div class="col l4">
+							<div class="col l6">
 								<label for="meetUpDate" class="black-text">Meet up Date</label>
-								<input id="meetUpDate" type="date" class="datepicker" value="8 July, 2015">
+								<input type="text" class="datepicker" ng-model="startDate">
 							</div>
-							<div class="col l4">
+							<div class="col l6">
 								<label for="returnDate" class="black-text">Return Date</label>
-								<input id="returnDate" type="date" class="datepicker" value="24 July, 2015">
-							</div>
-							<div class="col l4">
-								<label for="location" class="black-text">Location</label>
-								<input id="location" type="text" value="Yokohama">
+								<input type="text" class="datepicker" ng-model="returnDate">
 							</div>
 						</div>
 					</div>
 					<div class="col l2">
-						<img src="img/avatar/tue.jpg" alt="" class="responsive-img circle">
+						<img ng-src="{{request.book.url}}" alt="" class="responsive-img">
 					</div>
 				</div>
 
-				<ng-comment comments="comments"></ng-comment>
+				<ng-comment url="messageUrl" borrow-id="request.id" to-user="request.toUser.id"></ng-comment>
 
 			</div>
 		</div>

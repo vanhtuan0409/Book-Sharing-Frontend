@@ -2,20 +2,34 @@
 	
 	<div class="row" ng-repeat="comment in comments">
 		<div class="col l1">
-			<img ng-src="{{comment.avatar}}" alt="" class="circle responsive-img">
+			<a href="#/profile/{{comment.fromUser.id}}">
+				<img ng-src="{{comment.fromUser.url}}" alt="" class="circle responsive-img">
+			</a>
 		</div>
 		<div class="col l11">
-			<div><b>{{comment.name}}</b></div>
-			<div>{{comment.msg}}</div>
+			<div>
+				<a href="#/profile/{{comment.fromUser.id}}" class="black-text">
+					<b>{{comment.fromUser.name}}</b>
+				</a>
+			</div>
+			<div>{{comment.message}}</div>
 		</div>
 	</div>
-
-	<div class="divider"></div>
+	
+	<div ng-if="comments.length>0" class="divider"></div>
 	<div class="input-field">
-		<input type="text" id="user-comment" placeholder="Post your comment">
-		<a href="" class="btn waves-effect">
-			<i class="material-icons left">send</i>
-			Send
-		</a>
+		<input type="text" ng-model="commentMsg" placeholder="Post your comment">
+		<span ng-if="commentMsg.length>0">
+			<a class="btn waves-effect" ng-click="sendMsg();">
+				<i class="material-icons left">send</i>
+				Send
+			</a>
+		</span>
+		<span ng-if="commentMsg.length<=0">
+			<a class="btn disabled" ng-click="sendMsg();">
+				<i class="material-icons left">send</i>
+				Send
+			</a>
+		</span>
 	</div>
 </div>

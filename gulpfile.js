@@ -21,6 +21,10 @@ gulp.task('watch', function(){
 		gulp.src("app/app.js").pipe(livereload());
 	});
 
+	watch('app/service.js', function() {
+		gulp.src("app/service.js").pipe(livereload());
+	});
+
 	watch('app/**/*.html', function() {
 		gulp.src("app/**/*.html").pipe(livereload());
 	});
@@ -29,13 +33,6 @@ gulp.task('watch', function(){
 gulp.task('compileController', function(){
 	return gulp.src("app/views/**/*.js")
 		.pipe(concat('controllers.js'))
-		.pipe(gulp.dest('app'))
-		.pipe(livereload());
-});
-
-gulp.task('compileCSS', function(){
-	return gulp.src("app/views/**/*.css")
-		.pipe(concat('app.css'))
 		.pipe(gulp.dest('app'))
 		.pipe(livereload());
 });

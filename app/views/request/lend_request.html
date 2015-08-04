@@ -1,69 +1,12 @@
 <div class="container">
-	<div class="card-panel profile center-align">
-		<div class="">
-			<img src="img/avatar/the.jpg" alt="" class="responsive-img circle avatar">
-		</div>
-		<div class="">
-			<a href=""><i class="fa fa-facebook"></i></a>
-			<a href=""><i class="fa fa-twitter"></i></a>
-			<a href=""><i class="fa fa-link"></i></a>
-		</div>
-		<h1 style="font-size:30px"><a href="#/profile">Shiro</a></h1>
-		<div class="row">
-			<div class="col l2 offset-l5">
-				<a class="btn waves-effect">Follow</a>
-			</div>
-			<div class="col l3 offset-l2">
-				<a href="#/borrow" class="btn waves-effect">Manage your profile</a>
-			</div>
-		</div>
-		<div class="divider" style="margin-top: 15px;"></div>
-		<div class="row">
-			<div class="col l2">
-				<a href="#/profile">
-					<p style="font-size: 20px;">10</p>
-					<p><b>Book Owned</b></p>
-				</a>
-			</div>
-			<div class="col l2">
-				<a href="#/borrow">
-					<p style="font-size: 20px;">5</p>
-					<p><b>Book Borrow</b></p>
-				</a>
-			</div>
-			<div class="col l2">
-				<a href="#/lend">
-					<p style="font-size: 20px;">6</p>
-					<p><b>Book Lend</b></p>
-				</a>
-			</div>
-			<div class="col l2">
-				<a href="">
-					<p style="font-size: 20px;">100</p>
-					<p><b>Reputation</b></p>
-				</a>
-			</div>
-			<div class="col l2">
-				<a href="">
-					<p style="font-size: 20px;">2</p>
-					<p><b>Follower</b></p>
-				</a>
-			</div>
-			<div class="col l2">
-				<a href="">
-					<p style="font-size: 20px;">5</p>
-					<p><b>Following</b></p>
-				</a>
-			</div>
-		</div>
-	</div>
+	<profile-banner user="user"></profile-banner>
 
 	<div class="row">
 		<div class="col l3">
 			<div class="card-panel sidebar">
 				<div class="sidebar-item"><a href="">Profile</a></div>
 				<div class="divider"></div>
-				<div class="sidebar-item"><a href="">Book Manage</a></div>
+				<div class="sidebar-item"><a href="#/manage-book">Book Manage</a></div>
 				<div class="divider"></div>
 				<div class="sidebar-item"><a href="#/borrow">Borrow Request</a></div>
 				<div class="divider"></div>
@@ -74,175 +17,126 @@
 			<div class="card-panel">
 				<div class="row">
 					<ul class="tabs">
-						<li class="tab col s4"><a class="active black-text" href="#all">All</a></li>
-						<li class="tab col s4"><a class="black-text" href="#active">Active</a></li>
+						<li class="tab col s4"><a class="black-text" href="#all">All</a></li>
+						<li class="tab col s4"><a class="active black-text" href="#active">Active</a></li>
 						<li class="tab col s4"><a class="black-text" href="#complete">Complete</a></li>
 					</ul>
 				</div>
 				
 				<div id="all">
+					<div ng-repeat="request in requests | orderBy:['-status', 'book.bookname']">
 					<div class="row" style="padding: 10px 0;">
 						<div class="col l1">
-							<img src="img/book/book5.jpg" alt="" class="responsive-img">
+							<img ng-src="{{request.book.url}}" alt="" class="responsive-img">
 						</div>
-						<div class="col l7 ">
-							<div ><b>Huy Nguyen</b>(huy.atware@gmail.com) want to borrow your book <b>Lean Startup</b></div>
+						<div class="col l7">
+							<div><b>{{request.fromUser.name}}</b>({{request.fromUser.email}}) want to borrow your book <b>{{request.book.bookname}}</b></div>
 							<div>
 								<div class="left">
 									<i class="fa fa-calendar"></i> Meet up:
-									<i>28 Jul, 2015</i>
+									<i>{{request.startDate.substring(0,10)}}</i>
 								</div>
 								<div class="right">
 									<i class="fa fa-calendar"></i> Return:
-									<i>5 Aug, 2015</i>
+									<i>{{request.returnDate.substring(0,10)}}</i>
 								</div>
 							</div>
 							<div style="clear:both;">
-								<i class="fa fa-map-marker"></i> Location:
-								<i>Minatomirai</i>
+								Message:
+								<span ng-repeat="m in request.messages | orderBy:updatedAt:true | limitTo:1">
+									{{m.message | limitTo: 35}}{{m.messeage > 35 ? '...' : ''}}
+								</span>
+								<a href="#/message?borrow={{request.id}}">View more</a>
 							</div>
 						</div>
 						<div class="col l4">
-							<a href="#/message" class="btn waves-effect">Reply</a>
-							<a class="btn grey lighten-2 black-text">Cancel</a>
+							<div ng-if="request.status == 'init'">
+								<a class="btn waves-effect" style="padding: 0 1em" ng-click="acceptRequest(request.id);">Accept</a>
+								<a class="btn grey lighten-2 black-text" ng-click="deleteRequest(request.id);" style="padding: 0 1em">Delete</a>
+							</div>
+							<div ng-if="request.status == 'closed'">
+								<a class="btn disabled">Closed</a>
+							</div>
+							<div ng-if="request.status == 'ongoing'">
+								<a class="btn disabled">Accepted</a>
+							</div>
 						</div>
 					</div>
-					<div class="divider"></div>
+					<div ng-if="!$last" class="divider"></div>
+					</div>
+				</div>
+
+				<div id="active">
+					<div ng-repeat="request in requests | filter:{status: '!closed'} | orderBy:'book.bookname'">
 					<div class="row" style="padding: 10px 0;">
 						<div class="col l1">
-							<img src="img/book/book5.jpg" alt="" class="responsive-img">
+							<img ng-src="{{request.book.url}}" alt="" class="responsive-img">
 						</div>
-						<div class="col l7 ">
-							<div ><b>Huy Nguyen</b>(huy.atware@gmail.com) want to borrow your book <b>Lean Startup</b></div>
+						<div class="col l7">
+							<div><b>{{request.fromUser.name}}</b>({{request.fromUser.email}}) want to borrow your book <b>{{request.book.bookname}}</b></div>
 							<div>
 								<div class="left">
 									<i class="fa fa-calendar"></i> Meet up:
-									<i>28 Jul, 2015</i>
+									<i>{{request.startDate.substring(0,10)}}</i>
 								</div>
 								<div class="right">
 									<i class="fa fa-calendar"></i> Return:
-									<i>5 Aug, 2015</i>
+									<i>{{request.returnDate.substring(0,10)}}</i>
 								</div>
 							</div>
 							<div style="clear:both;">
-								<i class="fa fa-map-marker"></i> Location:
-								<i>Minatomirai</i>
+								Message:
+								<span ng-repeat="m in request.messages | orderBy:updatedAt:true | limitTo:1">
+									{{m.message | limitTo: 35}}{{m.messeage > 35 ? '...' : ''}}
+								</span>
+								<a href="#/message?borrow={{request.id}}">View more</a>
 							</div>
 						</div>
 						<div class="col l4">
-							<a href="#/message" class="btn waves-effect">Reply</a>
-							<a class="btn grey lighten-2 black-text">Cancel</a>
+							<div ng-if="request.status == 'init'">
+								<a class="btn waves-effect" style="padding: 0 1em" ng-click="acceptRequest(request.id);">Accept</a>
+								<a class="btn grey lighten-2 black-text" ng-click="deleteRequest(request.id);" style="padding: 0 1em">Delete</a>
+							</div>
+							<div ng-if="request.status == 'ongoing'">
+								<a class="btn disabled">Accepted</a>
+							</div>
 						</div>
 					</div>
-					<div class="divider"></div>
+					<div ng-if="!$last" class="divider"></div>
+					</div>
+				</div>
+
+				<div id="complete">
+					<div ng-repeat="request in requests | filter:{status: 'closed'} | orderBy:'book.bookname'">
 					<div class="row" style="padding: 10px 0;">
 						<div class="col l1">
-							<img src="img/book/book5.jpg" alt="" class="responsive-img">
+							<img ng-src="{{request.book.url}}" alt="" class="responsive-img">
 						</div>
-						<div class="col l7 ">
-							<div ><b>Huy Nguyen</b>(huy.atware@gmail.com) want to borrow your book <b>Lean Startup</b></div>
+						<div class="col l7">
+							<div><b>{{request.fromUser.name}}</b>({{request.fromUser.email}}) want to borrow your book <b>{{request.book.bookname}}</b></div>
 							<div>
 								<div class="left">
 									<i class="fa fa-calendar"></i> Meet up:
-									<i>28 Jul, 2015</i>
+									<i>{{request.startDate.substring(0,10)}}</i>
 								</div>
 								<div class="right">
 									<i class="fa fa-calendar"></i> Return:
-									<i>5 Aug, 2015</i>
+									<i>{{request.returnDate.substring(0,10)}}</i>
 								</div>
 							</div>
 							<div style="clear:both;">
-								<i class="fa fa-map-marker"></i> Location:
-								<i>Minatomirai</i>
+								Message:
+								<span ng-repeat="m in request.messages | orderBy:updatedAt:true | limitTo:1">
+									{{m.message | limitTo: 35}}{{m.messeage > 35 ? '...' : ''}}
+								</span>
+								<a href="#/message?borrow={{request.id}}">View more</a>
 							</div>
 						</div>
 						<div class="col l4">
 							<a class="btn disabled">Closed</a>
 						</div>
 					</div>
-				</div>
-
-				<div id="active">
-					<div class="row" style="padding: 10px 0;">
-						<div class="col l1">
-							<img src="img/book/book5.jpg" alt="" class="responsive-img">
-						</div>
-						<div class="col l7 ">
-							<div ><b>Huy Nguyen</b>(huy.atware@gmail.com) want to borrow your book <b>Lean Startup</b></div>
-							<div>
-								<div class="left">
-									<i class="fa fa-calendar"></i> Meet up:
-									<i>28 Jul, 2015</i>
-								</div>
-								<div class="right">
-									<i class="fa fa-calendar"></i> Return:
-									<i>5 Aug, 2015</i>
-								</div>
-							</div>
-							<div style="clear:both;">
-								<i class="fa fa-map-marker"></i> Location:
-								<i>Minatomirai</i>
-							</div>
-						</div>
-						<div class="col l4">
-							<a href="#/message" class="btn waves-effect">Reply</a>
-							<a class="btn grey lighten-2 black-text">Cancel</a>
-						</div>
-					</div>
-					<div class="divider"></div>
-					<div class="row" style="padding: 10px 0;">
-						<div class="col l1">
-							<img src="img/book/book5.jpg" alt="" class="responsive-img">
-						</div>
-						<div class="col l7 ">
-							<div ><b>Huy Nguyen</b>(huy.atware@gmail.com) want to borrow your book <b>Lean Startup</b></div>
-							<div>
-								<div class="left">
-									<i class="fa fa-calendar"></i> Meet up:
-									<i>28 Jul, 2015</i>
-								</div>
-								<div class="right">
-									<i class="fa fa-calendar"></i> Return:
-									<i>5 Aug, 2015</i>
-								</div>
-							</div>
-							<div style="clear:both;">
-								<i class="fa fa-map-marker"></i> Location:
-								<i>Minatomirai</i>
-							</div>
-						</div>
-						<div class="col l4">
-							<a href="#/message" class="btn waves-effect">Reply</a>
-							<a class="btn grey lighten-2 black-text">Cancel</a>
-						</div>
-					</div>
-				</div>
-
-				<div id="complete">
-					<div class="row" style="padding: 10px 0;">
-						<div class="col l1">
-							<img src="img/book/book5.jpg" alt="" class="responsive-img">
-						</div>
-						<div class="col l7 ">
-							<div ><b>Huy Nguyen</b>(huy.atware@gmail.com) want to borrow your book <b>Lean Startup</b></div>
-							<div>
-								<div class="left">
-									<i class="fa fa-calendar"></i> Meet up:
-									<i>28 Jul, 2015</i>
-								</div>
-								<div class="right">
-									<i class="fa fa-calendar"></i> Return:
-									<i>5 Aug, 2015</i>
-								</div>
-							</div>
-							<div style="clear:both;">
-								<i class="fa fa-map-marker"></i> Location:
-								<i>Minatomirai</i>
-							</div>
-						</div>
-						<div class="col l4">
-							<a class="btn disabled">Returned</a>
-						</div>
+					<div ng-if="!$last" class="divider"></div>
 					</div>
 				</div>
 			</div>

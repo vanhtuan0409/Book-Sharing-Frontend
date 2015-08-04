@@ -2,13 +2,13 @@
 	<div class="card-panel">
 		<div class="row">
 			<div class="col l2">
-				<img src="img/book/book4.jpg" alt="" class="responsive-img">	
+				<img ng-src="{{book.url}}" alt="" class="responsive-img">	
 			</div>
 			<div class="col l9">
-				<h3>Rain Reign</h3>
-				<p><b>Author: </b>Ann M.Martin</p>
-				<p><b>Published in: </b>2014</p>
-				<p><b>Description: </b>Rose Howard is obsessed with homonyms. She's thrilled that her own name is a homonym, and she purposely gave her dog Rain a name with two homonyms (Reign, Rein), which, according to Rose's rules of homonyms, is very special. Not everyone understands Rose's obsessions, her rules, and the other things that make her different - not her teachers, not other kids, and not her single father.</p>
+				<h3>{{book.bookname}}</h3>
+				<p><b>Author: </b>{{book.author.join(', ')}}</p>
+				<p><b>Type: </b>{{book.type}}</p>
+				<p><b>Description: </b>{{book.description}}</p>
 			</div>
 		</div>
 	</div>
@@ -19,61 +19,30 @@
 			<div class="card-content">
 				<div class="card-title black-text">Owners of this book</div>
 				<div class="divider"></div>
-
+				
+				<div ng-repeat="owner in book.owners">
 				<div class="row">
 					<div class="col l3">
-						<img src="img/avatar/the.jpg" alt="" class="circle responsive-img">
+						<img ng-src="{{owner.url}}" alt="" class="circle responsive-img">
 					</div>
 					<div class="col l9 black-text">
-						<div><b>Shiro-san</b></div>
+						<div><b>{{owner.name}}</b></div>
 						<div class="borrow_infor">
-							<i class="material-icons">email</i>Email:
-							shiro.atWare@gmail.com
+							<i class="material-icons">email</i>Email: {{owner.email}}
 						</div>
 						<div class="borrow_infor">
-							<i class="material-icons">my_location</i>Prefer place:
-							Hinode cho Station
+							<i class="material-icons">my_location</i>Prefer place:{{owner.placeToTrade.join(", ")}}
 						</div>
-						<button data-target="borrowPopup" class="btn waves-effect modal-trigger">Borrow</button>
+						<div class="borrow_infor">
+							<i class="material-icons">my_location</i>Prefer time:{{owner.timeToTrade.join(", ")}}
+						</div>
+						<button ng-click="jLoader.openModal('borrowPopup');setBorrow(owner, book);"
+							class="btn waves-effect modal-trigger">
+							Borrow
+						</button>
 					</div>
 				</div>
-				<div class="divider"></div>
-
-				<div class="row">
-					<div class="col l3">
-						<img src="img/avatar/huy.jpg" alt="" class="circle responsive-img">
-					</div>
-					<div class="col l9 black-text">
-						<div><b>Huy-san</b></div>
-						<div>
-							<i class="material-icons">email</i>Email:
-							huy.atWare@gmail.com
-						</div>
-						<div>
-							<i class="material-icons">my_location</i>Prefer place:
-							Idogaya Station
-						</div>
-						<button data-target="borrowPopup" class="btn waves-effect modal-trigger">Borrow</button>
-					</div>
-				</div>
-				<div class="divider"></div>
-
-				<div class="row">
-					<div class="col l3">
-						<img src="img/avatar/jack.jpg" alt="" class="circle responsive-img">
-					</div>
-					<div class="col l9 black-text">
-						<div><b>Jack-san</b></div>
-						<div>
-							<i class="material-icons">email</i>Email:
-							jack.atWare@gmail.com
-						</div>
-						<div>
-							<i class="material-icons">my_location</i>Prefer place:
-							Minatomirai Center Building
-						</div>
-						<button data-target="borrowPopup" class="btn waves-effect modal-trigger">Borrow</button>
-					</div>
+				<div ng-if="!$last" class="divider"></div>
 				</div>
 			</div>
 			</div>
@@ -81,11 +50,10 @@
 
 		<div class="col l8">
 			<div class="card-panel">
-				<ng-comment comments="comments"></ng-comment>
+				<ng-comment url="commentUrl" book="book.id"></ng-comment>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div id="borrowPopup" class="modal"
-	ng-include="'views/borrow_form/borrow_form.html'" onload="jLoader.loadDatePicker();"></div>
+<div id="borrowPopup" class="modal" borrow-form></div>

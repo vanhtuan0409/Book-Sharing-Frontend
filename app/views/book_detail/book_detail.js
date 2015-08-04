@@ -1,41 +1,42 @@
 'use strict';
 
-angular.module('myApp.book_detail', [])
+angular.module('myApp.book_detail', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/book', {
+	$routeProvider.when('/book/:id', {
 		templateUrl: 'views/book_detail/book_detail.html',
 		controller: 'BookDetailCtrl'
 	});
 }])
 
 .controller('BookDetailCtrl', [
-		'$scope',
-		'$jQueryLoader',
-		function($scope, $jQueryLoader) {
+	'$http',
+	'$scope',
+	'$jQueryLoader',
+	'$appConfig',
+	'$routeParams',
+	function($http, $scope, $jQueryLoader, $appConfig, $routeParams) {
 
-	$scope.jLoader = $jQueryLoader;
+		$scope.jLoader = $jQueryLoader;
+		$scope.loadJquery = function(){
+			$jQueryLoader.loadModal();
+		}
+		$scope.loadJquery();
 
-	$scope.comments = [
-		{
-			avatar: 'img/avatar/huy.jpg',
-			name: 'Huy Nguyen',
-			msg: 'Do you think this book is good?'
-		},
-		{
-			avatar: 'img/avatar/the.jpg',
-			name: 'Shiro',
-			msg: "Yes it's very good. The ending is so surprising"
-		},
-		{
-			avatar: 'img/avatar/tue.jpg',
-			name: 'Kenji',
-			msg: 'I think it can have a sequence'
-		},
-	];
+		$scope.setBorrow = function(user, book){
+			$scope.borrowUser = user;
+			$scope.borrowBook = book;
+		}
 
-	$scope.loadJquery = function(){
-		$jQueryLoader.loadModal();
-	}
-	$scope.loadJquery();
-}]);
+		$scope.getBook = function(){
+			$http.get($appConfig.API_URL + "/book/" + $routeParams.id)
+			.success(function(data){
+				if(!data.error){
+					$scope.book = data.content;
+				}
+			})
+		}
+		$scope.getBook();
+
+		$scope.commentUrl = $appConfig.API_URL + "/book_comment?book=" + $routeParams.id;
+	}]);

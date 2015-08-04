@@ -3,6 +3,7 @@
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
 	'ngRoute',
+	'ngCookies',
 	'myApp.header',
 	'myApp.home',
 	'myApp.profile',
@@ -12,6 +13,9 @@ angular.module('myApp', [
 	'myApp.search',
 	'myApp.borrow_request',
 	'myApp.lend_request',
+	'myApp.borrow_form',
+	'myApp.profile_banner',
+	'myApp.manage_book',
 	'myApp.footer',
 	'myApp.version',
 	'myApp.services'

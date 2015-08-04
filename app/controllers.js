@@ -1,43 +1,45 @@
 'use strict';
 
-angular.module('myApp.book_detail', [])
+angular.module('myApp.borrow_form', [])
 
-.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/book', {
-		templateUrl: 'views/book_detail/book_detail.html',
-		controller: 'BookDetailCtrl'
-	});
-}])
-
-.controller('BookDetailCtrl', [
-		'$scope',
-		'$jQueryLoader',
-		function($scope, $jQueryLoader) {
-
-	$scope.jLoader = $jQueryLoader;
-
-	$scope.comments = [
-		{
-			avatar: 'img/avatar/huy.jpg',
-			name: 'Huy Nguyen',
-			msg: 'Do you think this book is good?'
+.directive('borrowForm', ['$jQueryLoader', function($jQueryLoader) {
+	return {
+		restrict: 'A',
+		trasclude: true,
+		replace: false,
+		templateUrl: 'views/borrow_form/borrow_form.html',
+		link: function($scope,element,attrs){
+			$jQueryLoader.loadDatePicker();
 		},
-		{
-			avatar: 'img/avatar/the.jpg',
-			name: 'Shiro',
-			msg: "Yes it's very good. The ending is so surprising"
-		},
-		{
-			avatar: 'img/avatar/tue.jpg',
-			name: 'Kenji',
-			msg: 'I think it can have a sequence'
-		},
-	];
+		controller: ['$scope', '$http',  '$auth', '$appConfig', function($scope, $http, $auth, $config){
+			$scope.dateMeet = '';
+			$scope.dateReturn = '';
+			$scope.borrowMessage = '';
 
-	$scope.loadJquery = function(){
-		$jQueryLoader.loadModal();
+			$scope.submit = function(){
+				var dateMeet = $scope.dateMeet || "";
+				var dateReturn = $scope.dateReturn || "";
+				var msg = $scope.borrowMessage || "";
+				var bookId = $scope.borrowBook.id || "";
+				var toId = $scope.borrowUser.id || "";
+				var fromId = $auth.getUser().id || "";
+				$http.post(
+					$config.API_URL + "/user/" + fromId + "/borrow",
+					{
+						"requestToUser": toId,
+						"requestBook": bookId,
+						"startDate": dateMeet,
+						"returnDate": dateReturn,
+						"message": msg
+					}
+				).success(function(data){
+					window.location = "#/borrow";
+				}).error(function(data){
+					console.log(data);
+				})
+			}
+		}]
 	}
-	$scope.loadJquery();
 }]);
 'use strict';
 
@@ -47,13 +49,73 @@ angular.module('myApp.comment', [])
 	return {
 		restrict: 'E',
 		scope: {
-            comments: '='
+            url: '=',
+            borrowId: '=',
+            toUser: '=',
+            book: '='
         },
 		trasclude: true,
 		replace: true,
 		templateUrl: 'views/comment/comment.html',
 		link: function($scope,element,attrs){
-		}
+		},
+		controller: ['$scope', '$http', '$auth', '$appConfig', function($scope, $http, $auth, $appConfig){
+			$scope.commentMsg = '';
+			$scope.getMessage = function(){
+				$http.get($scope.url)
+				.success(function(data){
+					if(!data.error){
+						$scope.comments = data.content;
+					}
+				})
+			}
+			$scope.getMessage();
+
+			$scope.sendMsg = function(){
+				if($scope.borrowId && $scope.commentMsg.length>0 && $scope.toUser){
+					$http.post(
+						$scope.url,
+						{
+							'fromUser': $auth.getUser().id,
+							'toUser': $scope.toUser,
+							'borrow': $scope.borrowId,
+							'message': $scope.commentMsg
+						}
+					).success(function(data){
+						$scope.commentMsg = '';
+						$scope.getMessage();
+					})
+				}
+
+				if($scope.toUser && $scope.commentMsg.length>0 && !$scope.borrowId){
+					$http.post(
+						$scope.url,
+						{
+							'fromUser': $auth.getUser().id,
+							'toUser': $scope.toUser,
+							'message': $scope.commentMsg
+						}
+					).success(function(data){
+						$scope.commentMsg = '';
+						$scope.getMessage();
+					})
+				}
+
+				if($scope.book && $scope.commentMsg.length>0){
+					$http.post(
+						$scope.url,
+						{
+							'fromUser': $auth.getUser().id,
+							'book': $scope.book,
+							'message': $scope.commentMsg
+						}
+					).success(function(data){
+						$scope.commentMsg = '';
+						$scope.getMessage();
+					})
+				}
+			}
+		}]
 	}
 }]);
 'use strict';
@@ -71,16 +133,59 @@ angular.module('myApp.footer', [])
 
 angular.module('myApp.header', [])
 
-.directive('ngHeader', ['$jQueryLoader', function($jQueryLoader) {
+.directive('ngHeader', ['$jQueryLoader', '$timeout', function($jQueryLoader, $timeout) {
 	return {
 		restrict: 'E',
 		trasclude: true,
 		replace: true,
 		templateUrl: 'views/header/header.html',
 		link: function(scope,element,attrs){
-			$jQueryLoader.loadDropdown(false);
-			$jQueryLoader.loadDatePicker();
-		}
+			$timeout(function(){
+				$jQueryLoader.loadDropdown(false);
+			})
+		},
+		controller: ['$scope', '$http', '$auth', '$appConfig', '$cookieStore', function($scope, $http, $auth, $appConfig, $cookies){
+			$scope.user = $auth.getUser();
+
+			function fb_login(){
+				FB.login(function (response) {
+					if (response.authResponse) {
+			            var access_token = response.authResponse.accessToken;
+			            var id = response.authResponse.userID;
+			            $auth.login(access_token, id, function(){
+			            	window.location.reload();
+			            });
+			        }
+			    }, {
+			    	scope: ['email', 'public_profile', 'user_friends']
+			    });
+			}
+
+			 function statusChangeCallback(response) {
+				if (response.status === 'connected') {
+					var access_token = response.authResponse.accessToken;
+		            var id = response.authResponse.userID;
+		            $auth.login(access_token, id, function(){
+		            	window.location.reload();
+		            });
+				} else if (response.status === 'not_authorized') {
+					fb_login();
+				} else {
+					fb_login();
+				}
+			}
+
+			$scope.checkLoginState =function() {
+				FB.getLoginStatus(function(response) {
+					statusChangeCallback(response);
+				});
+			}
+
+			$scope.logout = function(){
+				$auth.logout();
+				window.location.reload();
+			}
+		}]
 	}
 }]);
 'use strict';
@@ -94,14 +199,28 @@ angular.module('myApp.home', [])
 	});
 }])
 
-.controller('HomeCtrl', ['$scope', '$jQueryLoader', function($scope, $jQueryLoader) {
+.controller('HomeCtrl', ['$scope', '$http', '$jQueryLoader', '$appConfig',
+	function($scope, $http, $jQueryLoader, $appConfig) {
 	$scope.jLoader = $jQueryLoader;
 
 	$scope.loadJquery = function(){
 		$jQueryLoader.loadTab();
 	}
-
 	$scope.loadJquery();
+
+	$scope.random = function(){
+		return Math.random();
+	}
+
+	$scope.getAllBook = function(){
+		$http.get($appConfig.API_URL+'/book')
+		.success(function(data){
+			if (!data.error){
+				$scope.books = data.content;
+			}
+		})
+	}
+	$scope.getAllBook();
 }]);
 'use strict';
 
@@ -114,43 +233,219 @@ angular.module('myApp.message', [])
 	});
 }])
 
-.controller('MessageCtrl', ['$scope', function($scope) {
-	$scope.loadJquery = function(){
-		$('.datepicker').pickadate({
-		    selectMonths: true
-		});
-	}
-	$scope.loadJquery();
+.controller('MessageCtrl', ['$http', '$scope', '$routeParams', '$auth', '$appConfig', '$jQueryLoader',
+	function($http, $scope, $routeParams, $auth, $config, $jQueryLoader) {
+		$jQueryLoader.loadDatePicker();
 
-	$scope.comments = [
-		{
-			avatar: 'img/avatar/tue.jpg',
-			name: 'Kenji',
-			msg: 'Can I borrow your book?',
-		},
-		{
-			avatar: 'img/avatar/the.jpg',
-			name: 'Shiro',
-			msg: 'Okay, what time do you want to meet',
-		},
-		{
-			avatar: 'img/avatar/tue.jpg',
-			name: 'Kenji',
-			msg: 'Maybe 12am on 06/28 at Yokohama Station. Is it ok?',
-		},
-		{
-			avatar: 'img/avatar/the.jpg',
-			name: 'Shiro',
-			msg: 'Ok see you there',
-		},
-	]
-}]);
+		var borrowId = $routeParams.borrow || '';
+		var currentUser = $auth.getUser();
+
+		$scope.user = currentUser;
+
+		$scope.redirect = function(borrowId){
+			window.location = "#/message?borrow=" + borrowId;
+		}
+
+		$scope.acceptRequest = function(requestId){
+			$http({
+				method: 'PUT',
+				url: $config.API_URL + "/borrow/" + requestId,
+				data:{
+					status: 'ongoing'
+				}
+			}).success(function(data){
+				if(!data.error){
+					$scope.getRequest();
+				}
+			}).error(function(data){
+				console.log(data);
+			})
+		}
+
+		$scope.getRequest = function(){
+			if (borrowId == ''){
+				var query = "where={or:[{fromUser:"+currentUser.id+"},{toUser:"+currentUser.id+"}]}";
+				$http.get($config.API_URL + "/borrow?limit=1&sort=updatedAt Desc&"+query)
+				.success(function(data){
+					if(!data.error){
+						$scope.request = data.content[0];
+						$scope.startDate = data.content[0].startDate.substring(0,10);
+						$scope.returnDate = data.content[0].returnDate.substring(0,10);
+
+						if(data.content[0].fromUser.id == currentUser.id){
+							$scope.borrowFlag = true;
+						} else {
+							$scope.borrowFlag = false;
+						}
+					}
+				})
+				.error(function(error){
+
+				})
+				return;
+			}
+			$http.get($config.API_URL + "/borrow/" + borrowId)
+			.success(function(data){
+				if(!data.error){
+					$scope.request = data.content;
+					$scope.startDate = data.content.startDate.substring(0,10);
+					$scope.returnDate = data.content.returnDate.substring(0,10);
+
+					if(data.content.fromUser.id == currentUser.id){
+						$scope.borrowFlag = true;
+					} else {
+						$scope.borrowFlag = false;
+					}
+				}
+			})
+			.error(function(error){
+
+			})
+		}
+		$scope.getRequest();
+
+		$scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId;
+
+		$scope.getMessageList = function(){
+			var query = "where={or:[{fromUser="+$auth.getUser().id+"},{toUser="+$auth.getUser().id+"}]}";
+			$http.get($config.API_URL + "/borrow?" + query)
+			.success(function(data){
+				if(!data.error){
+					$scope.msgList = data.content;
+				}
+			})
+			.error(function(data){
+				console.log(data);
+			})
+		}
+		$scope.getMessageList();
+
+		$scope.deleteRequest = function(requestId){
+			$http({
+				method: 'PUT',
+				url: $config.API_URL + "/borrow/" + requestId,
+				data:{
+					status: 'closed'
+				}
+			}).success(function(data){
+				if(!data.error){
+					if($scope.borrowFlag){
+						window.location="#/borrow";
+					} else {
+						window.location="#/lend";
+					}
+				}
+			}).error(function(data){
+				console.log(data);
+			})
+		}
+	}
+	]);
+'use strict';
+
+angular.module('myApp.manage_book', [])
+
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/manage-book', {
+		templateUrl: 'views/manage_book/manage_book.html',
+		controller: 'ManageBookCtrl'
+	});
+}])
+
+.controller('ManageBookCtrl', ['$scope','$http', '$appConfig', '$auth', '$jQueryLoader',
+	function($scope, $http, $config, $auth, $jQueryLoader) {
+		$jQueryLoader.loadTab();
+		$jQueryLoader.loadModal();
+		$scope.user = $auth.getUser();
+
+		$scope.searchString = '';
+		$scope.results = [];
+
+		function getBooks(){
+			$http.get($config.API_URL + "/user/" + $scope.user.id + "/books")
+			.success(function(data){
+				$scope.userBooks = data.content;
+			}).error(function(err){
+				console.log(err);
+			})
+		}
+		function getRecommendation(){
+			$http.get($config.API_URL + "/user/" + $scope.user.id + "/recommendation")
+			.success(function(data){
+				$scope.userRecommendation = data.content;
+			}).error(function(err){
+				console.log(err);
+			})
+		}
+
+		getBooks();
+		getRecommendation();
+
+		var mode = true;
+		$scope.setMode = function(m){
+			mode = m;
+		}
+
+		$scope.log = function(){
+			var bookApi = "https://www.googleapis.com/books/v1/volumes?q="+$scope.searchString+"&printType=books&projection=lite&maxResults=10&key=AIzaSyBTV6vCk7Ns6PQ0BT_BhaqorBlf253YwHs";
+			$http.get(bookApi)
+			.success(function(data){
+				$scope.results = data.items;
+			})
+			.error(function(data){
+				console.log(data);
+			})
+		}
+
+		$scope.addBook = function(bookObj){
+			var book = {
+				'bookname': bookObj.volumeInfo.title,
+				'author': bookObj.volumeInfo.authors,
+				'url': bookObj.volumeInfo.imageLinks.thumbnail,
+				'description': bookObj.volumeInfo.description,
+				'type': bookObj.volumeInfo.mainCategory,
+				'isBook': mode
+			};
+
+			var url = '';
+			if(mode){
+				url = $config.API_URL + "/user/" + $scope.user.id + "/books";
+			} else {
+				url = $config.API_URL + "/user/" + $scope.user.id + "/recommendation";
+			}
+			$http.post(url, book)
+			.success(function(data){
+				$("#addPopup").closeModal();
+				mode ? getBooks() : getRecommendation();
+			}).error(function(data){
+				console.log(data);
+			})
+		}
+		$scope.removeBook = function(bookId){
+			var url = '';
+			if(mode){
+				url = $config.API_URL + "/user/" + $scope.user.id + "/books/" + bookId;
+			} else {
+				url = $config.API_URL + "/user/" + $scope.user.id + "/recommendation/" + bookId;
+			}
+			$http.delete(url)
+			.success(function(data){
+				console.log(data);
+				$("#addPopup").closeModal();
+				mode ? getBooks() : getRecommendation();
+			})
+			.error(function(data){
+				console.log(data);
+			})
+		}
+	}
+	]);
 'use strict';
 
 angular.module('myApp.profile', [])
 
 .config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/profile', {
+	$routeProvider.when('/profile/:id', {
 		templateUrl: 'views/profile/profile.html',
 		controller: 'ProfileCtrl'
 	});
@@ -161,50 +456,55 @@ angular.module('myApp.profile', [])
 		'$routeParams',
 		'$http',
 		'$jQueryLoader',
-		function($scope, $routeParams, $http, $jQueryLoader) {
+		'$appConfig',
+		'$auth',
+		function($scope, $routeParams, $http, $jQueryLoader, $appConfig, $auth) {
 
 	$scope.jLoader = $jQueryLoader;
 
 	$scope.loadJquery = function(){
-		$(".book-list tr td:not(:has(button))").click(function(){
-			document.location = "#/book";
-		})
-		$jQueryLoader.loadModal();
 		$jQueryLoader.loadTab();
 	}
 	
-	$scope.user = {
-		name: "Shiro",
-		email: "shiro.atWare@gmail.com",
-		dob: "04/09/1993",
-		location: "Yokohama",
-		point: 100,
-		placeToTrade: ["Minatomirai Center Building", "Koganecho Station"],
-		timeToTrade: ["12:30"]
+	$scope.redirect = function(bookId){
+		document.location= "#/book/"+bookId;
 	}
 
-	$scope.comments = [
-		{
-			avatar: 'img/avatar/huy.jpg',
-			name: 'Huy Nguyen',
-			msg: 'Good person, return the book on time and keep it clean'
-		},
-		{
-			avatar: 'img/avatar/jack.jpg',
-			name: 'Jack',
-			msg: 'Nice guy !!!'
-		}
-	];
-	// var userId = $routeParams.id;
-	// $http.get('http://localhost:1337/api/user/'+userId).success(function(data){
-	// 	$scope.user = data;
-	// 	var d = new Date(data.dob);
-	// 	console.log(d);
-	// 	$scope.user.dob = d.getDate() + "/" + (d.getMonth()+1) + "/" + d.getFullYear();
-	// }).error(function(err){
-	// 	console.log(err);
-	// })
+	$scope.setBorrow = function(user, book){
+		$scope.borrowUser = user;
+		$scope.borrowBook = book;
+	}
+
+	$scope.currentUser = $auth.getUser();
+
+	$scope.getUser = function(){
+		$http.get($appConfig.API_URL + "/user/" + $routeParams.id)
+		.success(function(data){
+			if(!data.error){
+				$scope.user = data.content;
+			}
+		})
+	}
+	$scope.getUser();
+
+	$scope.ratingUrl = $appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id;
+
 	$scope.loadJquery();
+}]);
+'use strict';
+
+angular.module('myApp.profile_banner', [])
+
+.directive('profileBanner', ['$jQueryLoader', function($jQueryLoader) {
+	return {
+		restrict: 'E',
+		scope:{
+			user: "="
+		},
+		trasclude: true,
+		replace: false,
+		templateUrl: 'views/profile_banner/profile_banner.html'
+	}
 }]);
 'use strict';
 
@@ -217,39 +517,57 @@ angular.module('myApp.borrow_request', [])
 	});
 }])
 
-.controller('BorrowRequestCtrl', ['$scope','$routeParams','$http', function($scope, $routeParams, $http) {
-	$scope.loadJquery = function(){
-		$(".book-list tr td:not(:has(button))").click(function(){
-			document.location = "#/book";
-		})
-		$('.modal-trigger').leanModal();
-		$('.datepicker').pickadate({
-		    selectMonths: true, // Creates a dropdown to control month
-		    container: 'body'
-		});
-		$('ul.tabs').tabs();
-	}
+.controller('BorrowRequestCtrl', ['$scope','$http', '$appConfig', '$auth', '$jQueryLoader',
+	function($scope, $http, $config, $auth, $jQueryLoader) {
+		$jQueryLoader.loadTab();
+		$scope.user = $auth.getUser();
 
-	$scope.user = {
-		name: "Shiro",
-		email: "shiro.atWare@gmail.com",
-		dob: "04/09/1993",
-		location: "Yokohama",
-		point: 100,
-		placeToTrade: ["Minatomirai Center Building", "Koganecho Station"],
-		timeToTrade: ["12:30"]
+		$scope.getRequest = function(){
+			$http.get($config.API_URL + "/borrow?fromUser=" + $scope.user.id)
+			.success(function(data){
+				if(!data.error){
+					$scope.requests = data.content;
+				}
+			})
+			.error(function(data){
+				console.log(data);
+			})
+		}
+		$scope.getRequest();
+
+		$scope.acceptRequest = function(requestId){
+			$http({
+				method: 'PUT',
+				url: $config.API_URL + "/borrow/" + requestId,
+				data:{
+					status: 'ongoing'
+				}
+			}).success(function(data){
+				if(!data.error){
+					$scope.getRequest();
+				}
+			}).error(function(data){
+				console.log(data);
+			})
+		}
+
+		$scope.deleteRequest = function(requestId){
+			$http({
+				method: 'PUT',
+				url: $config.API_URL + "/borrow/" + requestId,
+				data:{
+					status: 'closed'
+				}
+			}).success(function(data){
+				if(!data.error){
+					$scope.getRequest();
+				}
+			}).error(function(data){
+				console.log(data);
+			})
+		}
 	}
-	// var userId = $routeParams.id;
-	// $http.get('http://localhost:1337/api/user/'+userId).success(function(data){
-	// 	$scope.user = data;
-	// 	var d = new Date(data.dob);
-	// 	console.log(d);
-	// 	$scope.user.dob = d.getDate() + "/" + (d.getMonth()+1) + "/" + d.getFullYear();
-	// }).error(function(err){
-	// 	console.log(err);
-	// })
-	$scope.loadJquery();
-}]);
+]);
 'use strict';
 
 angular.module('myApp.lend_request', [])
@@ -261,39 +579,57 @@ angular.module('myApp.lend_request', [])
 	});
 }])
 
-.controller('LendRequestCtrl', ['$scope','$routeParams','$http', function($scope, $routeParams, $http) {
-	$scope.loadJquery = function(){
-		$(".book-list tr td:not(:has(button))").click(function(){
-			document.location = "#/book";
-		})
-		$('.modal-trigger').leanModal();
-		$('.datepicker').pickadate({
-		    selectMonths: true, // Creates a dropdown to control month
-		    container: 'body'
-		});
-		$('ul.tabs').tabs();
-	}
+.controller('LendRequestCtrl', ['$scope','$http', '$appConfig', '$auth', '$jQueryLoader',
+	function($scope, $http, $config, $auth, $jQueryLoader) {
+		$jQueryLoader.loadTab();
+		$scope.user = $auth.getUser();
 
-	$scope.user = {
-		name: "Shiro",
-		email: "shiro.atWare@gmail.com",
-		dob: "04/09/1993",
-		location: "Yokohama",
-		point: 100,
-		placeToTrade: ["Minatomirai Center Building", "Koganecho Station"],
-		timeToTrade: ["12:30"]
+		$scope.getRequest = function(){
+			$http.get($config.API_URL + "/borrow?toUser=" + $scope.user.id)
+			.success(function(data){
+				if(!data.error){
+					$scope.requests = data.content;
+				}
+			})
+			.error(function(data){
+				console.log(data);
+			})
+		}
+		$scope.getRequest();
+
+		$scope.acceptRequest = function(requestId){
+			$http({
+				method: 'PUT',
+				url: $config.API_URL + "/borrow/" + requestId,
+				data:{
+					status: 'ongoing'
+				}
+			}).success(function(data){
+				if(!data.error){
+					$scope.getRequest();
+				}
+			}).error(function(data){
+				console.log(data);
+			})
+		}
+
+		$scope.deleteRequest = function(requestId){
+			$http({
+				method: 'PUT',
+				url: $config.API_URL + "/borrow/" + requestId,
+				data:{
+					status: 'closed'
+				}
+			}).success(function(data){
+				if(!data.error){
+					$scope.getRequest();
+				}
+			}).error(function(data){
+				console.log(data);
+			})
+		}
 	}
-	// var userId = $routeParams.id;
-	// $http.get('http://localhost:1337/api/user/'+userId).success(function(data){
-	// 	$scope.user = data;
-	// 	var d = new Date(data.dob);
-	// 	console.log(d);
-	// 	$scope.user.dob = d.getDate() + "/" + (d.getMonth()+1) + "/" + d.getFullYear();
-	// }).error(function(err){
-	// 	console.log(err);
-	// })
-	$scope.loadJquery();
-}]);
+]);
 'use strict';
 
 angular.module('myApp.search', [])
@@ -315,3 +651,45 @@ angular.module('myApp.search', [])
 	}
 	$scope.loadJquery();
 }]);
+'use strict';
+
+angular.module('myApp.book_detail', ['ngRoute'])
+
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/book/:id', {
+		templateUrl: 'views/book_detail/book_detail.html',
+		controller: 'BookDetailCtrl'
+	});
+}])
+
+.controller('BookDetailCtrl', [
+	'$http',
+	'$scope',
+	'$jQueryLoader',
+	'$appConfig',
+	'$routeParams',
+	function($http, $scope, $jQueryLoader, $appConfig, $routeParams) {
+
+		$scope.jLoader = $jQueryLoader;
+		$scope.loadJquery = function(){
+			$jQueryLoader.loadModal();
+		}
+		$scope.loadJquery();
+
+		$scope.setBorrow = function(user, book){
+			$scope.borrowUser = user;
+			$scope.borrowBook = book;
+		}
+
+		$scope.getBook = function(){
+			$http.get($appConfig.API_URL + "/book/" + $routeParams.id)
+			.success(function(data){
+				if(!data.error){
+					$scope.book = data.content;
+				}
+			})
+		}
+		$scope.getBook();
+
+		$scope.commentUrl = $appConfig.API_URL + "/book_comment?book=" + $routeParams.id;
+	}]);

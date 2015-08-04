@@ -9,36 +9,54 @@ angular.module('myApp.lend_request', [])
 	});
 }])
 
-.controller('LendRequestCtrl', ['$scope','$routeParams','$http', function($scope, $routeParams, $http) {
-	$scope.loadJquery = function(){
-		$(".book-list tr td:not(:has(button))").click(function(){
-			document.location = "#/book";
-		})
-		$('.modal-trigger').leanModal();
-		$('.datepicker').pickadate({
-		    selectMonths: true, // Creates a dropdown to control month
-		    container: 'body'
-		});
-		$('ul.tabs').tabs();
-	}
+.controller('LendRequestCtrl', ['$scope','$http', '$appConfig', '$auth', '$jQueryLoader',
+	function($scope, $http, $config, $auth, $jQueryLoader) {
+		$jQueryLoader.loadTab();
+		$scope.user = $auth.getUser();
 
-	$scope.user = {
-		name: "Shiro",
-		email: "shiro.atWare@gmail.com",
-		dob: "04/09/1993",
-		location: "Yokohama",
-		point: 100,
-		placeToTrade: ["Minatomirai Center Building", "Koganecho Station"],
-		timeToTrade: ["12:30"]
+		$scope.getRequest = function(){
+			$http.get($config.API_URL + "/borrow?toUser=" + $scope.user.id)
+			.success(function(data){
+				if(!data.error){
+					$scope.requests = data.content;
+				}
+			})
+			.error(function(data){
+				console.log(data);
+			})
+		}
+		$scope.getRequest();
+
+		$scope.acceptRequest = function(requestId){
+			$http({
+				method: 'PUT',
+				url: $config.API_URL + "/borrow/" + requestId,
+				data:{
+					status: 'ongoing'
+				}
+			}).success(function(data){
+				if(!data.error){
+					$scope.getRequest();
+				}
+			}).error(function(data){
+				console.log(data);
+			})
+		}
+
+		$scope.deleteRequest = function(requestId){
+			$http({
+				method: 'PUT',
+				url: $config.API_URL + "/borrow/" + requestId,
+				data:{
+					status: 'closed'
+				}
+			}).success(function(data){
+				if(!data.error){
+					$scope.getRequest();
+				}
+			}).error(function(data){
+				console.log(data);
+			})
+		}
 	}
-	// var userId = $routeParams.id;
-	// $http.get('http://localhost:1337/api/user/'+userId).success(function(data){
-	// 	$scope.user = data;
-	// 	var d = new Date(data.dob);
-	// 	console.log(d);
-	// 	$scope.user.dob = d.getDate() + "/" + (d.getMonth()+1) + "/" + d.getFullYear();
-	// }).error(function(err){
-	// 	console.log(err);
-	// })
-	$scope.loadJquery();
-}]);
+]);

@@ -11,20 +11,29 @@
         </div>
         <ul class="right">
             <li style="position: relative;">
+                <a href="#/message">
+                    <i class="material-icons">message</i>
+                </a>
+            </li>
+            <li style="position: relative;">
                 <a href="#/borrow">
                     <i class="material-icons">notifications</i>
                 </a>
                 <div class="header-notify"></div>
             </li>
-            <li>
-                <a id="user-header-dropdown-menu" class="dropdown-button" href="#/" data-activates="user-header-dropdown">
-                    Tuấn Vương<i class="material-icons right">arrow_drop_down</i>
+            <li ng-if="user != null" >
+                <a id="user-header-dropdown-menu" class="dropdown-button" href="#/" data-activates="user-header-dropdown" ng-click="open(this);">
+                    {{user.name}}<i class="material-icons right">arrow_drop_down</i>
                 </a>
+            </li>
+            <li ng-if="user == null">
+                <a href="" ng-click="checkLoginState();">Login via FB</a>
             </li>
         </ul>
         <ul id="user-header-dropdown" class="dropdown-content">
-            <li><a href="#/profile">View profile</a></li>
-            <li><a href="#!">Logout</a></li>
+            <li><a href="#/profile/{{user.id}}">View profile</a></li>
+            <li><a href="#/manage-book">Manage your book</a></li>
+            <li><a href="" ng-click="logout();">Logout</a></li>
         </ul>
     </div>
 </nav>
