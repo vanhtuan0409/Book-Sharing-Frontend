@@ -64,12 +64,9 @@ angular.module('myApp.manage_book', [])
 				'isBook': mode
 			};
 
-			var url = '';
-			if(mode){
-				url = $config.API_URL + "/user/" + $scope.user.id + "/books";
-			} else {
-				url = $config.API_URL + "/user/" + $scope.user.id + "/recommendation";
-			}
+			console.log(mode);
+
+			var url = $config.API_URL + "/user/" + $scope.user.id + "/addBook";
 			$http.post(url, book)
 			.success(function(data){
 				$("#addPopup").closeModal();
