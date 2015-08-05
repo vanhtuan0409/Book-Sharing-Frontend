@@ -83,7 +83,7 @@ angular.module('myApp.message', [])
 		$scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId;
 
 		$scope.getMessageList = function(){
-			var query = "fromUser="+currentUser.id+"||toUser="+currUser.id;
+			var query = "fromUser="+currentUser.id+"||toUser="+currentUser.id;
 			$http.get($config.API_URL + "/borrow?" + query)
 			.success(function(data){
 				if(!data.error){
