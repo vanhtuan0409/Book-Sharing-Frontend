@@ -10,6 +10,14 @@ angular.module('myApp.profile_banner', [])
 		},
 		trasclude: true,
 		replace: false,
-		templateUrl: 'views/profile_banner/profile_banner.html'
+		templateUrl: 'views/profile_banner/profile_banner.html',
+		controller: ['$scope','$auth', function($scope, $auth){
+			var currentId = $auth.getUser().id;
+			if(currentId == $scope.user.id){
+				$scope.isMyself = true;
+			} else {
+				$scope.isMyself = false;
+			}
+		}]
 	}
 }]);

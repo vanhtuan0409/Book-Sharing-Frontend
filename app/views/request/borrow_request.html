@@ -51,7 +51,6 @@
 						</div>
 						<div class="col l4">
 							<div ng-if="request.status == 'init'">
-								<a class="btn waves-effect" style="padding: 0 1em" ng-click="acceptRequest(request.id);">Accept</a>
 								<a class="btn grey lighten-2 black-text" ng-click="deleteRequest(request.id);" style="padding: 0 1em">Delete</a>
 							</div>
 							<div ng-if="request.status == 'closed'">
@@ -94,7 +93,6 @@
 						</div>
 						<div class="col l4">
 							<div ng-if="request.status == 'init'">
-								<a class="btn waves-effect" style="padding: 0 1em" ng-click="acceptRequest(request.id);">Accept</a>
 								<a class="btn grey lighten-2 black-text" ng-click="deleteRequest(request.id);" style="padding: 0 1em">Delete</a>
 							</div>
 							<div ng-if="request.status == 'ongoing'">
