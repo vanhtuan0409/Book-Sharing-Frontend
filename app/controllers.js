@@ -520,25 +520,23 @@ angular.module('myApp.profile', [])
 
 angular.module('myApp.profile_banner', [])
 
-.directive('profileBanner', ['$jQueryLoader', function($jQueryLoader) {
+.directive('profileBanner', ['$jQueryLoader', '$auth', function($jQueryLoader, $auth) {
 	return {
 		restrict: 'E',
 		scope:{
-			user: "="
+			user: "@"
 		},
 		trasclude: true,
 		replace: false,
 		templateUrl: 'views/profile_banner/profile_banner.html',
-		controller: ['$scope','$auth', function($scope, $auth){
+		link: function(scope,element,attrs){
 			var currentId = $auth.getUser().id;
-			console.log($scope);
-			console.log(scope);
-			if(currentId == $scope.user.id){
-				$scope.isMyself = true;
+			if(currentId == scope.user.id){
+				scope.isMyself = true;
 			} else {
-				$scope.isMyself = false;
+				scope.isMyself = false;
 			}
-		}]
+		}
 	}
 }]);
 'use strict';
