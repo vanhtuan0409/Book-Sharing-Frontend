@@ -4,6 +4,7 @@
 angular.module('myApp', [
 	'ngRoute',
 	'ngCookies',
+	'facebook',
 	'myApp.header',
 	'myApp.home',
 	'myApp.profile',
@@ -19,8 +20,9 @@ angular.module('myApp', [
 	'myApp.footer',
 	'myApp.version',
 	'myApp.services'
-]).
+])
 
-config(['$routeProvider', function($routeProvider) {
+.config(['$routeProvider', 'FacebookProvider', function($routeProvider, FacebookProvider) {
 	$routeProvider.otherwise({redirectTo: '/'});
+	FacebookProvider.init('869003383193808');
 }]);
