@@ -1,47 +1,5 @@
 'use strict';
 
-angular.module('myApp.book_detail', ['ngRoute'])
-
-.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/book/:id', {
-		templateUrl: 'views/book_detail/book_detail.html',
-		controller: 'BookDetailCtrl'
-	});
-}])
-
-.controller('BookDetailCtrl', [
-	'$http',
-	'$scope',
-	'$jQueryLoader',
-	'$appConfig',
-	'$routeParams',
-	function($http, $scope, $jQueryLoader, $appConfig, $routeParams) {
-
-		$scope.jLoader = $jQueryLoader;
-		$scope.loadJquery = function(){
-			$jQueryLoader.loadModal();
-		}
-		$scope.loadJquery();
-
-		$scope.setBorrow = function(user, book){
-			$scope.borrowUser = user;
-			$scope.borrowBook = book;
-		}
-
-		$scope.getBook = function(){
-			$http.get($appConfig.API_URL + "/book/" + $routeParams.id)
-			.success(function(data){
-				if(!data.error){
-					$scope.book = data.content;
-				}
-			})
-		}
-		$scope.getBook();
-
-		$scope.commentUrl = $appConfig.API_URL + "/book_comment?book=" + $routeParams.id;
-	}]);
-'use strict';
-
 angular.module('myApp.borrow_form', [])
 
 .directive('borrowForm', ['$jQueryLoader', function($jQueryLoader) {
@@ -524,13 +482,14 @@ angular.module('myApp.profile_banner', [])
 	return {
 		restrict: 'E',
 		scope:{
-			user: "@"
+			user: "="
 		},
 		trasclude: true,
 		replace: false,
 		templateUrl: 'views/profile_banner/profile_banner.html',
 		link: function(scope,element,attrs){
 			var currentId = $auth.getUser().id;
+			console.log(scope.user);
 			if(currentId == scope.user.id){
 				scope.isMyself = true;
 			} else {
@@ -684,3 +643,45 @@ angular.module('myApp.search', [])
 	}
 	$scope.loadJquery();
 }]);
+'use strict';
+
+angular.module('myApp.book_detail', ['ngRoute'])
+
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/book/:id', {
+		templateUrl: 'views/book_detail/book_detail.html',
+		controller: 'BookDetailCtrl'
+	});
+}])
+
+.controller('BookDetailCtrl', [
+	'$http',
+	'$scope',
+	'$jQueryLoader',
+	'$appConfig',
+	'$routeParams',
+	function($http, $scope, $jQueryLoader, $appConfig, $routeParams) {
+
+		$scope.jLoader = $jQueryLoader;
+		$scope.loadJquery = function(){
+			$jQueryLoader.loadModal();
+		}
+		$scope.loadJquery();
+
+		$scope.setBorrow = function(user, book){
+			$scope.borrowUser = user;
+			$scope.borrowBook = book;
+		}
+
+		$scope.getBook = function(){
+			$http.get($appConfig.API_URL + "/book/" + $routeParams.id)
+			.success(function(data){
+				if(!data.error){
+					$scope.book = data.content;
+				}
+			})
+		}
+		$scope.getBook();
+
+		$scope.commentUrl = $appConfig.API_URL + "/book_comment?book=" + $routeParams.id;
+	}]);
