@@ -40,7 +40,7 @@ angular.module('myApp.message', [])
 
 		$scope.getRequest = function(){
 			if (borrowId == ''){
-				var query = "fromUser="+currentUser.id+"||toUser="+currUser.id;
+				var query = "fromUser="+currentUser.id+"||toUser="+currentUser.id;
 				$http.get($config.API_URL + "/borrow?limit=1&sort=updatedAt Desc&"+query)
 				.success(function(data){
 					if(!data.error){
