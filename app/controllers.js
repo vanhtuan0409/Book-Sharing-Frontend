@@ -348,57 +348,6 @@ angular.module('myApp.manage_book', [])
 	]);
 'use strict';
 
-angular.module('myApp.profile', [])
-
-.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/profile/:id', {
-		templateUrl: 'views/profile/profile.html',
-		controller: 'ProfileCtrl'
-	});
-}])
-
-.controller('ProfileCtrl', [
-		'$scope',
-		'$routeParams',
-		'$http',
-		'$jQueryLoader',
-		'$appConfig',
-		'$auth',
-		function($scope, $routeParams, $http, $jQueryLoader, $appConfig, $auth) {
-
-	$scope.jLoader = $jQueryLoader;
-
-	$scope.loadJquery = function(){
-		$jQueryLoader.loadTab();
-	}
-	
-	$scope.redirect = function(bookId){
-		document.location= "#/book/"+bookId;
-	}
-
-	$scope.setBorrow = function(user, book){
-		$scope.borrowUser = user;
-		$scope.borrowBook = book;
-	}
-
-	$scope.currentUser = $auth.getUser();
-
-	$scope.getUser = function(){
-		$http.get($appConfig.API_URL + "/user/" + $routeParams.id)
-		.success(function(data){
-			if(!data.error){
-				$scope.user = data.content;
-			}
-		})
-	}
-	$scope.getUser();
-
-	$scope.ratingUrl = $appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id;
-
-	$scope.loadJquery();
-}]);
-'use strict';
-
 angular.module('myApp.message', [])
 
 .config(['$routeProvider', function($routeProvider) {
@@ -518,6 +467,57 @@ angular.module('myApp.message', [])
 	]);
 'use strict';
 
+angular.module('myApp.profile', [])
+
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/profile/:id', {
+		templateUrl: 'views/profile/profile.html',
+		controller: 'ProfileCtrl'
+	});
+}])
+
+.controller('ProfileCtrl', [
+		'$scope',
+		'$routeParams',
+		'$http',
+		'$jQueryLoader',
+		'$appConfig',
+		'$auth',
+		function($scope, $routeParams, $http, $jQueryLoader, $appConfig, $auth) {
+
+	$scope.jLoader = $jQueryLoader;
+
+	$scope.loadJquery = function(){
+		$jQueryLoader.loadTab();
+	}
+	
+	$scope.redirect = function(bookId){
+		document.location= "#/book/"+bookId;
+	}
+
+	$scope.setBorrow = function(user, book){
+		$scope.borrowUser = user;
+		$scope.borrowBook = book;
+	}
+
+	$scope.currentUser = $auth.getUser();
+
+	$scope.getUser = function(){
+		$http.get($appConfig.API_URL + "/user/" + $routeParams.id)
+		.success(function(data){
+			if(!data.error){
+				$scope.user = data.content;
+			}
+		})
+	}
+	$scope.getUser();
+
+	$scope.ratingUrl = $appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id;
+
+	$scope.loadJquery();
+}]);
+'use strict';
+
 angular.module('myApp.profile_banner', [])
 
 .directive('profileBanner', ['$jQueryLoader', function($jQueryLoader) {
@@ -531,6 +531,9 @@ angular.module('myApp.profile_banner', [])
 		templateUrl: 'views/profile_banner/profile_banner.html',
 		controller: ['$scope','$auth', function($scope, $auth){
 			var currentId = $auth.getUser().id;
+			console.log('current', currentId);
+			console.log('profile', $scope.user.id);
+			console.log('bool', currentId == $scope.user.id)
 			if(currentId == $scope.user.id){
 				$scope.isMyself = true;
 			} else {
@@ -538,27 +541,6 @@ angular.module('myApp.profile_banner', [])
 			}
 		}]
 	}
-}]);
-'use strict';
-
-angular.module('myApp.search', [])
-
-.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/search', {
-		templateUrl: 'views/search/search.html',
-		controller: 'SearchCtrl'
-	});
-}])
-
-.controller('SearchCtrl', ['$scope', function($scope) {
-	$scope.loadJquery = function(){
-		$('ul.tabs').tabs();
-
-		$(".search-list tr td").click(function(){
-			document.location = "#/book";
-		})
-	}
-	$scope.loadJquery();
 }]);
 'use strict';
 
@@ -684,3 +666,24 @@ angular.module('myApp.lend_request', [])
 		}
 	}
 ]);
+'use strict';
+
+angular.module('myApp.search', [])
+
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/search', {
+		templateUrl: 'views/search/search.html',
+		controller: 'SearchCtrl'
+	});
+}])
+
+.controller('SearchCtrl', ['$scope', function($scope) {
+	$scope.loadJquery = function(){
+		$('ul.tabs').tabs();
+
+		$(".search-list tr td").click(function(){
+			document.location = "#/book";
+		})
+	}
+	$scope.loadJquery();
+}]);
