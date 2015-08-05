@@ -40,7 +40,7 @@ angular.module('myApp.message', [])
 
 		$scope.getRequest = function(){
 			if (borrowId == ''){
-				var query = "where={or:[{fromUser:"+currentUser.id+"},{toUser:"+currentUser.id+"}]}";
+				var query = "fromUser="+currentUser.id+"||toUser="+currUser.id;
 				$http.get($config.API_URL + "/borrow?limit=1&sort=updatedAt Desc&"+query)
 				.success(function(data){
 					if(!data.error){
@@ -83,7 +83,7 @@ angular.module('myApp.message', [])
 		$scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId;
 
 		$scope.getMessageList = function(){
-			var query = "where={or:[{fromUser="+$auth.getUser().id+"},{toUser="+$auth.getUser().id+"}]}";
+			var query = "fromUser="+currentUser.id+"||toUser="+currUser.id;
 			$http.get($config.API_URL + "/borrow?" + query)
 			.success(function(data){
 				if(!data.error){

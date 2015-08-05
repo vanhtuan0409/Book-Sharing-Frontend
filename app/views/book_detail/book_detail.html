@@ -27,15 +27,6 @@
 					</div>
 					<div class="col l9 black-text">
 						<div><b>{{owner.name}}</b></div>
-						<div class="borrow_infor">
-							<i class="material-icons">email</i>Email: {{owner.email}}
-						</div>
-						<div class="borrow_infor">
-							<i class="material-icons">my_location</i>Prefer place:{{owner.placeToTrade.join(", ")}}
-						</div>
-						<div class="borrow_infor">
-							<i class="material-icons">my_location</i>Prefer time:{{owner.timeToTrade.join(", ")}}
-						</div>
 						<button ng-click="jLoader.openModal('borrowPopup');setBorrow(owner, book);"
 							class="btn waves-effect modal-trigger">
 							Borrow
