@@ -13,10 +13,8 @@ angular.module('myApp.profile_banner', [])
 		templateUrl: 'views/profile_banner/profile_banner.html',
 		controller: ['$scope','$auth', function($scope, $auth){
 			var currentId = $auth.getUser().id;
-			console.log('current', currentId);
-			console.log('profile', $scope.user);
-			console.log('user', user);
-			console.log('bool', currentId == $scope.user.id)
+			console.log($scope);
+			console.log(scope);
 			if(currentId == $scope.user.id){
 				$scope.isMyself = true;
 			} else {
