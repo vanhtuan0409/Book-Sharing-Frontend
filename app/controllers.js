@@ -85,6 +85,67 @@ angular.module('myApp.borrow_form', [])
 }]);
 'use strict';
 
+angular.module('myApp.header', [])
+
+.directive('ngHeader', ['$jQueryLoader', '$timeout', function($jQueryLoader, $timeout) {
+	return {
+		restrict: 'E',
+		trasclude: true,
+		replace: true,
+		templateUrl: 'views/header/header.html',
+		link: function(scope,element,attrs){
+			$timeout(function(){
+				$jQueryLoader.loadDropdown(false);
+			})
+		},
+		controller: ['$scope', '$http', '$auth', '$appConfig', '$cookieStore', function($scope, $http, $auth, $appConfig, $cookies){
+			$scope.user = $auth.getUser();
+
+			function fb_login(){
+				FB.login(function (response) {
+					if (response.authResponse) {
+			            var access_token = response.authResponse.accessToken;
+			            var id = response.authResponse.userID;
+			            $auth.login(access_token, id, function(){
+			            	window.location.reload();
+			            });
+			        }
+			    }, {
+			    	scope: ['email', 'public_profile', 'user_friends']
+			    });
+			}
+
+			 function statusChangeCallback(response) {
+				if (status === 'connected') {
+					var access_token = response.authResponse.accessToken;
+		            var id = response.authResponse.userID;
+		            $auth.login(access_token, id, function(){
+		            	window.location.reload();
+		            });
+				} else if (status === 'not_authorized') {
+					fb_login();
+				} else {
+					fb_login();
+				}
+			}
+
+			var status = null;
+			$scope.checkLoginState =function() {
+				FB.getLoginStatus(function(response) {
+					// statusChangeCallback(response);
+					status = response.status;
+				});
+			}
+
+			$scope.logout = function(){
+				$auth.logout();
+				window.location.reload();
+			}
+		}]
+	}
+}]);
+'use strict';
+
 angular.module('myApp.comment', [])
 
 .directive('ngComment', ['$jQueryLoader', function($jQueryLoader) {
@@ -171,129 +232,6 @@ angular.module('myApp.footer', [])
 		templateUrl: 'views/footer/footer.html'
 	}
 });
-'use strict';
-
-angular.module('myApp.header', [])
-
-.directive('ngHeader', ['$jQueryLoader', '$timeout', function($jQueryLoader, $timeout) {
-	return {
-		restrict: 'E',
-		trasclude: true,
-		replace: true,
-		templateUrl: 'views/header/header.html',
-		link: function(scope,element,attrs){
-			$timeout(function(){
-				$jQueryLoader.loadDropdown(false);
-			})
-		},
-		controller: ['$scope', '$http', '$auth', '$appConfig', '$cookieStore', function($scope, $http, $auth, $appConfig, $cookies){
-			$scope.user = $auth.getUser();
-
-			function fb_login(){
-				FB.login(function (response) {
-					if (response.authResponse) {
-						var access_token = response.authResponse.accessToken;
-						var id = response.authResponse.userID;
-						$auth.login(access_token, id, function(){
-							window.location.reload();
-						});
-					}
-				}, {
-					scope: ['email', 'public_profile', 'user_friends']
-				});
-			}
-
-			function statusChangeCallback(response) {
-				if (response.status === 'connected') {
-					var access_token = response.authResponse.accessToken;
-					var id = response.authResponse.userID;
-					$auth.login(access_token, id, function(){
-						window.location.reload();
-					});
-				} else if (response.status === 'not_authorized') {
-					fb_login();
-				} else {
-					fb_login();
-				}
-			}
-
-			$scope.checkLoginState =function() {
-				FB.getLoginStatus(function(response) {
-					if (response.status === 'connected') {
-						var access_token = response.authResponse.accessToken;
-						var id = response.authResponse.userID;
-						$auth.login(access_token, id, function(){
-							window.location.reload();
-						});
-					} else if (response.status === 'not_authorized') {
-						FB.login(function (response) {
-							if (response.authResponse) {
-								var access_token = response.authResponse.accessToken;
-								var id = response.authResponse.userID;
-								$auth.login(access_token, id, function(){
-									window.location.reload();
-								});
-							}
-						}, {
-							scope: ['email', 'public_profile', 'user_friends']
-						});
-					} else {
-						FB.login(function (response) {
-							if (response.authResponse) {
-								var access_token = response.authResponse.accessToken;
-								var id = response.authResponse.userID;
-								$auth.login(access_token, id, function(){
-									window.location.reload();
-								});
-							}
-						}, {
-							scope: ['email', 'public_profile', 'user_friends']
-						});
-					}
-				});
-}
-
-$scope.logout = function(){
-	$auth.logout();
-	window.location.reload();
-}
-}]
-}
-}]);
-'use strict';
-
-angular.module('myApp.home', [])
-
-.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/', {
-		templateUrl: 'views/home/home.html',
-		controller: 'HomeCtrl'
-	});
-}])
-
-.controller('HomeCtrl', ['$scope', '$http', '$jQueryLoader', '$appConfig',
-	function($scope, $http, $jQueryLoader, $appConfig) {
-	$scope.jLoader = $jQueryLoader;
-
-	$scope.loadJquery = function(){
-		$jQueryLoader.loadTab();
-	}
-	$scope.loadJquery();
-
-	$scope.random = function(){
-		return Math.random();
-	}
-
-	$scope.getAllBook = function(){
-		$http.get($appConfig.API_URL+'/book')
-		.success(function(data){
-			if (!data.error){
-				$scope.books = data.content;
-			}
-		})
-	}
-	$scope.getAllBook();
-}]);
 'use strict';
 
 angular.module('myApp.manage_book', [])
@@ -396,123 +334,38 @@ angular.module('myApp.manage_book', [])
 	]);
 'use strict';
 
-angular.module('myApp.message', [])
+angular.module('myApp.home', [])
 
 .config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/message', {
-		templateUrl: 'views/message/message.html',
-		controller: 'MessageCtrl'
+	$routeProvider.when('/', {
+		templateUrl: 'views/home/home.html',
+		controller: 'HomeCtrl'
 	});
 }])
 
-.controller('MessageCtrl', ['$http', '$scope', '$routeParams', '$auth', '$appConfig', '$jQueryLoader',
-	function($http, $scope, $routeParams, $auth, $config, $jQueryLoader) {
-		$jQueryLoader.loadDatePicker();
+.controller('HomeCtrl', ['$scope', '$http', '$jQueryLoader', '$appConfig',
+	function($scope, $http, $jQueryLoader, $appConfig) {
+	$scope.jLoader = $jQueryLoader;
 
-		var borrowId = $routeParams.borrow || '';
-		var currentUser = $auth.getUser();
-
-		$scope.user = currentUser;
-
-		$scope.redirect = function(borrowId){
-			window.location = "#/message?borrow=" + borrowId;
-		}
-
-		$scope.acceptRequest = function(requestId){
-			$http({
-				method: 'PUT',
-				url: $config.API_URL + "/borrow/" + requestId,
-				data:{
-					status: 'ongoing'
-				}
-			}).success(function(data){
-				if(!data.error){
-					$scope.getRequest();
-				}
-			}).error(function(data){
-				console.log(data);
-			})
-		}
-
-		$scope.getRequest = function(){
-			if (borrowId == ''){
-				var query = "where={or:[{fromUser:"+currentUser.id+"},{toUser:"+currentUser.id+"}]}";
-				$http.get($config.API_URL + "/borrow?limit=1&sort=updatedAt Desc&"+query)
-				.success(function(data){
-					if(!data.error){
-						$scope.request = data.content[0];
-						$scope.startDate = data.content[0].startDate.substring(0,10);
-						$scope.returnDate = data.content[0].returnDate.substring(0,10);
-
-						if(data.content[0].fromUser.id == currentUser.id){
-							$scope.borrowFlag = true;
-						} else {
-							$scope.borrowFlag = false;
-						}
-					}
-				})
-				.error(function(error){
-
-				})
-				return;
-			}
-			$http.get($config.API_URL + "/borrow/" + borrowId)
-			.success(function(data){
-				if(!data.error){
-					$scope.request = data.content;
-					$scope.startDate = data.content.startDate.substring(0,10);
-					$scope.returnDate = data.content.returnDate.substring(0,10);
-
-					if(data.content.fromUser.id == currentUser.id){
-						$scope.borrowFlag = true;
-					} else {
-						$scope.borrowFlag = false;
-					}
-				}
-			})
-			.error(function(error){
-
-			})
-		}
-		$scope.getRequest();
-
-		$scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId;
-
-		$scope.getMessageList = function(){
-			var query = "where={or:[{fromUser="+$auth.getUser().id+"},{toUser="+$auth.getUser().id+"}]}";
-			$http.get($config.API_URL + "/borrow?" + query)
-			.success(function(data){
-				if(!data.error){
-					$scope.msgList = data.content;
-				}
-			})
-			.error(function(data){
-				console.log(data);
-			})
-		}
-		$scope.getMessageList();
-
-		$scope.deleteRequest = function(requestId){
-			$http({
-				method: 'PUT',
-				url: $config.API_URL + "/borrow/" + requestId,
-				data:{
-					status: 'closed'
-				}
-			}).success(function(data){
-				if(!data.error){
-					if($scope.borrowFlag){
-						window.location="#/borrow";
-					} else {
-						window.location="#/lend";
-					}
-				}
-			}).error(function(data){
-				console.log(data);
-			})
-		}
+	$scope.loadJquery = function(){
+		$jQueryLoader.loadTab();
 	}
-	]);
+	$scope.loadJquery();
+
+	$scope.random = function(){
+		return Math.random();
+	}
+
+	$scope.getAllBook = function(){
+		$http.get($appConfig.API_URL+'/book')
+		.success(function(data){
+			if (!data.error){
+				$scope.books = data.content;
+			}
+		})
+	}
+	$scope.getAllBook();
+}]);
 'use strict';
 
 angular.module('myApp.profile', [])
@@ -563,21 +416,6 @@ angular.module('myApp.profile', [])
 	$scope.ratingUrl = $appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id;
 
 	$scope.loadJquery();
-}]);
-'use strict';
-
-angular.module('myApp.profile_banner', [])
-
-.directive('profileBanner', ['$jQueryLoader', function($jQueryLoader) {
-	return {
-		restrict: 'E',
-		scope:{
-			user: "="
-		},
-		trasclude: true,
-		replace: false,
-		templateUrl: 'views/profile_banner/profile_banner.html'
-	}
 }]);
 'use strict';
 
@@ -703,6 +541,140 @@ angular.module('myApp.lend_request', [])
 		}
 	}
 ]);
+'use strict';
+
+angular.module('myApp.message', [])
+
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/message', {
+		templateUrl: 'views/message/message.html',
+		controller: 'MessageCtrl'
+	});
+}])
+
+.controller('MessageCtrl', ['$http', '$scope', '$routeParams', '$auth', '$appConfig', '$jQueryLoader',
+	function($http, $scope, $routeParams, $auth, $config, $jQueryLoader) {
+		$jQueryLoader.loadDatePicker();
+
+		var borrowId = $routeParams.borrow || '';
+		var currentUser = $auth.getUser();
+
+		$scope.user = currentUser;
+
+		$scope.redirect = function(borrowId){
+			window.location = "#/message?borrow=" + borrowId;
+		}
+
+		$scope.acceptRequest = function(requestId){
+			$http({
+				method: 'PUT',
+				url: $config.API_URL + "/borrow/" + requestId,
+				data:{
+					status: 'ongoing'
+				}
+			}).success(function(data){
+				if(!data.error){
+					$scope.getRequest();
+				}
+			}).error(function(data){
+				console.log(data);
+			})
+		}
+
+		$scope.getRequest = function(){
+			if (borrowId == ''){
+				var query = "where={or:[{fromUser:"+currentUser.id+"},{toUser:"+currentUser.id+"}]}";
+				$http.get($config.API_URL + "/borrow?limit=1&sort=updatedAt Desc&"+query)
+				.success(function(data){
+					if(!data.error){
+						$scope.request = data.content[0];
+						$scope.startDate = data.content[0].startDate.substring(0,10);
+						$scope.returnDate = data.content[0].returnDate.substring(0,10);
+
+						if(data.content[0].fromUser.id == currentUser.id){
+							$scope.borrowFlag = true;
+						} else {
+							$scope.borrowFlag = false;
+						}
+					}
+				})
+				.error(function(error){
+
+				})
+				return;
+			}
+			$http.get($config.API_URL + "/borrow/" + borrowId)
+			.success(function(data){
+				if(!data.error){
+					$scope.request = data.content;
+					$scope.startDate = data.content.startDate.substring(0,10);
+					$scope.returnDate = data.content.returnDate.substring(0,10);
+
+					if(data.content.fromUser.id == currentUser.id){
+						$scope.borrowFlag = true;
+					} else {
+						$scope.borrowFlag = false;
+					}
+				}
+			})
+			.error(function(error){
+
+			})
+		}
+		$scope.getRequest();
+
+		$scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId;
+
+		$scope.getMessageList = function(){
+			var query = "where={or:[{fromUser="+$auth.getUser().id+"},{toUser="+$auth.getUser().id+"}]}";
+			$http.get($config.API_URL + "/borrow?" + query)
+			.success(function(data){
+				if(!data.error){
+					$scope.msgList = data.content;
+				}
+			})
+			.error(function(data){
+				console.log(data);
+			})
+		}
+		$scope.getMessageList();
+
+		$scope.deleteRequest = function(requestId){
+			$http({
+				method: 'PUT',
+				url: $config.API_URL + "/borrow/" + requestId,
+				data:{
+					status: 'closed'
+				}
+			}).success(function(data){
+				if(!data.error){
+					if($scope.borrowFlag){
+						window.location="#/borrow";
+					} else {
+						window.location="#/lend";
+					}
+				}
+			}).error(function(data){
+				console.log(data);
+			})
+		}
+	}
+	]);
+'use strict';
+
+angular.module('myApp.profile_banner', [])
+
+.directive('profileBanner', ['$jQueryLoader', function($jQueryLoader) {
+	return {
+		restrict: 'E',
+		scope:{
+			user: "="
+		},
+		trasclude: true,
+		replace: false,
+		templateUrl: 'views/profile_banner/profile_banner.html'
+	}
+}]);
 'use strict';
 
 angular.module('myApp.search', [])
