@@ -175,7 +175,7 @@ angular.module('myApp.footer', [])
 
 angular.module('myApp.header', ['facebook'])
 .config(function(FacebookProvider){
-	FacebookProvider.init('869003383193808');
+	FacebookProvider.init('868507116576768');
 })
 .directive('ngHeader', ['$jQueryLoader', '$timeout', function($jQueryLoader, $timeout) {
 	return {
