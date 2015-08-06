@@ -15,7 +15,8 @@ angular.module('myApp.book_detail', ['ngRoute'])
 	'$jQueryLoader',
 	'$appConfig',
 	'$routeParams',
-	function($http, $scope, $jQueryLoader, $appConfig, $routeParams) {
+	'$auth',
+	function($http, $scope, $jQueryLoader, $appConfig, $routeParams, $auth) {
 
 		$scope.jLoader = $jQueryLoader;
 		$scope.loadJquery = function(){
@@ -50,4 +51,19 @@ angular.module('myApp.book_detail', ['ngRoute'])
 				console.log(error);
 			})
 		}
+		$scope.addMessage = function(message){
+			$http.post(
+				$appConfig.API_URL + "/book_comment",
+				{
+					'fromUser': $auth.getUser().id,
+					'book': $scope.book.id,
+					'message': message
+				}
+			).success(function(data){
+				if(!data.error){
+					$scope.getMessage();
+				}
+			})
+		}
+		$scope.getMessage();
 	}]);

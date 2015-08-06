@@ -15,7 +15,8 @@ angular.module('myApp.book_detail', ['ngRoute'])
 	'$jQueryLoader',
 	'$appConfig',
 	'$routeParams',
-	function($http, $scope, $jQueryLoader, $appConfig, $routeParams) {
+	'$auth',
+	function($http, $scope, $jQueryLoader, $appConfig, $routeParams, $auth) {
 
 		$scope.jLoader = $jQueryLoader;
 		$scope.loadJquery = function(){
@@ -50,6 +51,21 @@ angular.module('myApp.book_detail', ['ngRoute'])
 				console.log(error);
 			})
 		}
+		$scope.addMessage = function(message){
+			$http.post(
+				$appConfig.API_URL + "/book_comment",
+				{
+					'fromUser': $auth.getUser().id,
+					'book': $scope.book.id,
+					'message': message
+				}
+			).success(function(data){
+				if(!data.error){
+					$scope.getMessage();
+				}
+			})
+		}
+		$scope.getMessage();
 	}]);
 'use strict';
 
@@ -102,10 +118,8 @@ angular.module('myApp.comment', [])
 	return {
 		restrict: 'E',
 		scope: {
-            url: '=',
-            borrowId: '=',
-            toUser: '=',
-            book: '='
+            comments: '=',
+            addMessage: '&'
         },
 		trasclude: true,
 		replace: true,
@@ -113,62 +127,55 @@ angular.module('myApp.comment', [])
 		link: function($scope,element,attrs){
 		},
 		controller: ['$scope', '$http', '$auth', '$appConfig', function($scope, $http, $auth, $appConfig){
-			$scope.getMessage = function(){
-				$http.get($scope.url)
-				.success(function(data){
-					if(!data.error){
-						$scope.comments = data.content;
-					}
-				})
-			}
-			$scope.getMessage();
-
-
 			$scope.commentMsg = '';
 			$scope.sendMsg = function(){
-				if($scope.borrowId && $scope.commentMsg.length>0 && $scope.toUser){
-					$http.post(
-						$scope.url,
-						{
-							'fromUser': $auth.getUser().id,
-							'toUser': $scope.toUser,
-							'borrow': $scope.borrowId,
-							'message': $scope.commentMsg
-						}
-					).success(function(data){
-						$scope.commentMsg = '';
-						$scope.getMessage();
-					})
-				}
-
-				if($scope.toUser && $scope.commentMsg.length>0 && !$scope.borrowId){
-					$http.post(
-						$scope.url,
-						{
-							'fromUser': $auth.getUser().id,
-							'toUser': $scope.toUser,
-							'message': $scope.commentMsg
-						}
-					).success(function(data){
-						$scope.commentMsg = '';
-						$scope.getMessage();
-					})
-				}
-
-				if($scope.book && $scope.commentMsg.length>0){
-					$http.post(
-						$scope.url,
-						{
-							'fromUser': $auth.getUser().id,
-							'book': $scope.book,
-							'message': $scope.commentMsg
-						}
-					).success(function(data){
-						$scope.commentMsg = '';
-						$scope.getMessage();
-					})
-				}
+				$scope.addMessage({msg: $scope.commentMsg});
+				$scope.commentMsg = '';
 			}
+			// $scope.sendMsg = function(){
+			// 	if($scope.borrowId && $scope.commentMsg.length>0 && $scope.toUser){
+			// 		$http.post(
+			// 			$scope.url,
+			// 			{
+			// 				'fromUser': $auth.getUser().id,
+			// 				'toUser': $scope.toUser,
+			// 				'borrow': $scope.borrowId,
+			// 				'message': $scope.commentMsg
+			// 			}
+			// 		).success(function(data){
+			// 			$scope.commentMsg = '';
+			// 			$scope.getMessage();
+			// 		})
+			// 	}
+
+			// 	if($scope.toUser && $scope.commentMsg.length>0 && !$scope.borrowId){
+			// 		$http.post(
+			// 			$scope.url,
+			// 			{
+			// 				'fromUser': $auth.getUser().id,
+			// 				'toUser': $scope.toUser,
+			// 				'message': $scope.commentMsg
+			// 			}
+			// 		).success(function(data){
+			// 			$scope.commentMsg = '';
+			// 			$scope.getMessage();
+			// 		})
+			// 	}
+
+			// 	if($scope.book && $scope.commentMsg.length>0){
+			// 		$http.post(
+			// 			$scope.url,
+			// 			{
+			// 				'fromUser': $auth.getUser().id,
+			// 				'book': $scope.book,
+			// 				'message': $scope.commentMsg
+			// 			}
+			// 		).success(function(data){
+			// 			$scope.commentMsg = '';
+			// 			$scope.getMessage();
+			// 		})
+			// 	}
+			// }
 		}]
 	}
 }]);
@@ -441,6 +448,35 @@ angular.module('myApp.message', [])
 		$scope.getRequest();
 
 		$scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId;
+		$scope.getComment = function(){
+			$http.get($scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId)
+			.success(function(data){
+				if(!data.error){
+					$scope.commentList = data.content
+				}
+			})
+			.error(function(error){
+				console.log(error);
+			})
+		}
+		$scope.getComment();
+		$scope.addComment = function(message){
+			$http.post(
+				$config.API_URL + "/message",
+				{
+					'fromUser': $auth.getUser().id,
+					'toUser': $auth.getUser().id == $scope.request.fromUser.id ? $scope.request.toUser.id : $scope.request.fromUser.id,
+					'borrow': $scope.request.id,
+					'message': message
+				}
+			).success(function(data){
+				if(!data.error){
+					$scope.getComment();
+				}
+			}).error(function(err){
+				console.log(err);
+			})
+		}
 
 		$scope.getMessageList = function(){
 			var query = "fromUser="+currentUser.id+"||toUser="+currentUser.id;
@@ -525,6 +561,32 @@ angular.module('myApp.profile', [])
 	$scope.getUser();
 
 	$scope.ratingUrl = $appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id;
+	$scope.getMessage = function(){
+		$http.get($appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id)
+		.success(function(data){
+			if(!data.error){
+				$scope.commentList = data.content
+			}
+		})
+		.error(function(error){
+			console.log(error);
+		})
+	}
+	$scope.addMessage = function(message){
+		$http.post(
+			$appConfig.API_URL + "/user_rating",
+			{
+				'fromUser': $auth.getUser().id,
+				'toUser': $scope.user.id,
+				'message': message
+			}
+		).success(function(data){
+			if(!data.error){
+				$scope.getMessage();
+			}
+		})
+	}
+	$scope.getMessage();
 
 	$scope.loadJquery();
 }]);

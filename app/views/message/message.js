@@ -81,6 +81,35 @@ angular.module('myApp.message', [])
 		$scope.getRequest();
 
 		$scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId;
+		$scope.getComment = function(){
+			$http.get($scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId)
+			.success(function(data){
+				if(!data.error){
+					$scope.commentList = data.content
+				}
+			})
+			.error(function(error){
+				console.log(error);
+			})
+		}
+		$scope.getComment();
+		$scope.addComment = function(message){
+			$http.post(
+				$config.API_URL + "/message",
+				{
+					'fromUser': $auth.getUser().id,
+					'toUser': $auth.getUser().id == $scope.request.fromUser.id ? $scope.request.toUser.id : $scope.request.fromUser.id,
+					'borrow': $scope.request.id,
+					'message': message
+				}
+			).success(function(data){
+				if(!data.error){
+					$scope.getComment();
+				}
+			}).error(function(err){
+				console.log(err);
+			})
+		}
 
 		$scope.getMessageList = function(){
 			var query = "fromUser="+currentUser.id+"||toUser="+currentUser.id;

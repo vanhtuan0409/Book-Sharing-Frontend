@@ -46,6 +46,32 @@ angular.module('myApp.profile', [])
 	$scope.getUser();
 
 	$scope.ratingUrl = $appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id;
+	$scope.getMessage = function(){
+		$http.get($appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id)
+		.success(function(data){
+			if(!data.error){
+				$scope.commentList = data.content
+			}
+		})
+		.error(function(error){
+			console.log(error);
+		})
+	}
+	$scope.addMessage = function(message){
+		$http.post(
+			$appConfig.API_URL + "/user_rating",
+			{
+				'fromUser': $auth.getUser().id,
+				'toUser': $scope.user.id,
+				'message': message
+			}
+		).success(function(data){
+			if(!data.error){
+				$scope.getMessage();
+			}
+		})
+	}
+	$scope.getMessage();
 
 	$scope.loadJquery();
 }]);
