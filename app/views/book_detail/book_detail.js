@@ -39,4 +39,15 @@ angular.module('myApp.book_detail', ['ngRoute'])
 		$scope.getBook();
 
 		$scope.commentUrl = $appConfig.API_URL + "/book_comment?book=" + $routeParams.id;
+		$scope.getMessage = function(){
+			$http.get($appConfig.API_URL + "/book_comment?book=" + $routeParams.id)
+			.success(function(data){
+				if(!data.error){
+					$scope.commentList = data.content
+				}
+			})
+			.error(function(error){
+				console.log(error);
+			})
+		}
 	}]);

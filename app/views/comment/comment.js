@@ -17,7 +17,6 @@ angular.module('myApp.comment', [])
 		link: function($scope,element,attrs){
 		},
 		controller: ['$scope', '$http', '$auth', '$appConfig', function($scope, $http, $auth, $appConfig){
-			$scope.commentMsg = '';
 			$scope.getMessage = function(){
 				$http.get($scope.url)
 				.success(function(data){

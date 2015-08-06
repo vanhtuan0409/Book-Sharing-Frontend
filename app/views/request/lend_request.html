@@ -4,22 +4,22 @@
 	<div class="row">
 		<div class="col l3">
 			<div class="card-panel sidebar">
-				<div class="sidebar-item"><a href="">Profile</a></div>
+				<div class="sidebar-item"><a href="">プロフィール</a></div>
 				<div class="divider"></div>
-				<div class="sidebar-item"><a href="#/manage-book">Book Manage</a></div>
+				<div class="sidebar-item"><a href="#/manage-book">本の管理</a></div>
 				<div class="divider"></div>
-				<div class="sidebar-item"><a href="#/borrow">Borrow Request</a></div>
+				<div class="sidebar-item"><a href="#/borrow">あなたが借りたい本</a></div>
 				<div class="divider"></div>
-				<div class="sidebar-item active"><a href="#/lend">Lending Request</a></div>
+				<div class="sidebar-item active"><a href="#/lend">あなたにリクエストが届いている本</a></div>
 			</div>
 		</div>
 		<div class="col l9">
 			<div class="card-panel">
 				<div class="row">
 					<ul class="tabs">
-						<li class="tab col s4"><a class="black-text" href="#all">All</a></li>
-						<li class="tab col s4"><a class="active black-text" href="#active">Active</a></li>
-						<li class="tab col s4"><a class="black-text" href="#complete">Complete</a></li>
+						<li class="tab col s4"><a class="black-text" href="#all">覧</a></li>
+						<li class="tab col s4"><a class="active black-text" href="#active">貸出中</a></li>
+						<li class="tab col s4"><a class="black-text" href="#complete">完了</a></li>
 					</ul>
 				</div>
 				
@@ -33,20 +33,20 @@
 							<div><b>{{request.fromUser.name}}</b>({{request.fromUser.email}}) want to borrow your book <b>{{request.book.bookname}}</b></div>
 							<div>
 								<div class="left">
-									<i class="fa fa-calendar"></i> Meet up:
+									<i class="fa fa-calendar"></i> 待ち合わせ日:
 									<i>{{request.startDate.substring(0,10)}}</i>
 								</div>
 								<div class="right">
-									<i class="fa fa-calendar"></i> Return:
+									<i class="fa fa-calendar"></i> 返却日:
 									<i>{{request.returnDate.substring(0,10)}}</i>
 								</div>
 							</div>
 							<div style="clear:both;">
-								Message:
+								メッセージ:
 								<span ng-repeat="m in request.messages | orderBy:updatedAt:true | limitTo:1">
 									{{m.message | limitTo: 35}}{{m.messeage > 35 ? '...' : ''}}
 								</span>
-								<a href="#/message?borrow={{request.id}}">View more</a>
+								<a href="#/message?borrow={{request.id}}">もっと見る...</a>
 							</div>
 						</div>
 						<div class="col l4">
@@ -76,20 +76,20 @@
 							<div><b>{{request.fromUser.name}}</b>({{request.fromUser.email}}) want to borrow your book <b>{{request.book.bookname}}</b></div>
 							<div>
 								<div class="left">
-									<i class="fa fa-calendar"></i> Meet up:
+									<i class="fa fa-calendar"></i> 待ち合わせ日:
 									<i>{{request.startDate.substring(0,10)}}</i>
 								</div>
 								<div class="right">
-									<i class="fa fa-calendar"></i> Return:
+									<i class="fa fa-calendar"></i> 返却日:
 									<i>{{request.returnDate.substring(0,10)}}</i>
 								</div>
 							</div>
 							<div style="clear:both;">
-								Message:
+								メッセージ:
 								<span ng-repeat="m in request.messages | orderBy:updatedAt:true | limitTo:1">
 									{{m.message | limitTo: 35}}{{m.messeage > 35 ? '...' : ''}}
 								</span>
-								<a href="#/message?borrow={{request.id}}">View more</a>
+								<a href="#/message?borrow={{request.id}}">もっと見る...</a>
 							</div>
 						</div>
 						<div class="col l4">
@@ -116,20 +116,20 @@
 							<div><b>{{request.fromUser.name}}</b>({{request.fromUser.email}}) want to borrow your book <b>{{request.book.bookname}}</b></div>
 							<div>
 								<div class="left">
-									<i class="fa fa-calendar"></i> Meet up:
+									<i class="fa fa-calendar"></i> 待ち合わせ日:
 									<i>{{request.startDate.substring(0,10)}}</i>
 								</div>
 								<div class="right">
-									<i class="fa fa-calendar"></i> Return:
+									<i class="fa fa-calendar"></i> 返却日:
 									<i>{{request.returnDate.substring(0,10)}}</i>
 								</div>
 							</div>
 							<div style="clear:both;">
-								Message:
+								メッセージ:
 								<span ng-repeat="m in request.messages | orderBy:updatedAt:true | limitTo:1">
 									{{m.message | limitTo: 35}}{{m.messeage > 35 ? '...' : ''}}
 								</span>
-								<a href="#/message?borrow={{request.id}}">View more</a>
+								<a href="#/message?borrow={{request.id}}">もっと見る...</a>
 							</div>
 						</div>
 						<div class="col l4">

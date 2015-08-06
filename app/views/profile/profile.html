@@ -5,13 +5,11 @@
 		<div class="col l3">
 			<div class="card basic-information">
 				<div class="card-content">
-					<div class="card-title black-text">Information</div>
+					<div class="card-title black-text">情報</div>
 					<div class="divider"></div>
-					<p><b>Name: </b>{{user.name}}</p>
-					<p><b>Location: </b>{{user.location}}</p>
-					<p><b>Reputation: </b>{{user.point}}</p>
-					<p><b>Prefer place: </b>{{user.placeToTrade.join(", ")}}</p>
-					<p><b>Prefer time: </b>{{user.timeToTrade.join(", ")}}</p>
+					<p><b>名前: </b>{{user.name}}</p>
+					<p><b>場所: </b>{{user.location}}</p>
+					<p><b>評判: </b>{{user.point}}</p>
 				</div>
 			</div>
 
@@ -34,9 +32,9 @@
 			<div class="card-panel">
 				<div class="row">
 					<ul class="tabs">
-						<li class="tab col s4"><a class="active black-text" href="#book">Books</a></li>
-						<li class="tab col s4"><a class="black-text" href="#recommendation">Recommendation</a></li>
-						<li class="tab col s4"><a class="black-text" href="#user-rating">User rating</a></li>
+						<li class="tab col s4"><a class="active black-text" href="#book">本</a></li>
+						<li class="tab col s4"><a class="black-text" href="#recommendation">おすすめの本</a></li>
+						<li class="tab col s4"><a class="black-text" href="#user-rating">おすすめ度</a></li>
 					</ul>
 				</div>
 
@@ -44,10 +42,10 @@
 					<table class="bordered centered responsive-table book-list">
 						<thead>
 							<tr>
-								<th>Book Cover</th>
-								<th>Book Name</th>
-								<th>Author</th>
-								<th>Type</th>
+								<th>本の表紙</th>
+								<th>本の名前</th>
+								<th>作者</th>
+								<th>タイプ</th>
 								<th ng-if="currentUser.id != user.id"></th>
 							</tr>
 						</thead>
@@ -75,10 +73,10 @@
 					<table class="bordered centered responsive-table book-list">
 						<thead>
 							<tr>
-								<th>Book Cover</th>
-								<th>Book Name</th>
-								<th>Author</th>
-								<th>Type</th>
+								<th>本の表紙</th>
+								<th>本の名前</th>
+								<th>作者</th>
+								<th>タイプ</th>
 							</tr>
 						</thead>
 						<tbody>
