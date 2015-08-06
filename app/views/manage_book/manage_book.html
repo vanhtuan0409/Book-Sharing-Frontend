@@ -30,7 +30,7 @@
 								<th>作者</th>
 								<th>タイプ</th>
 								<th>
-									<a class="btn-floating waves-effect waves-light red lighten-2 modal-trigger" href="#addPopup" ng-click="setMode(true);"><i class="material-icons">add</i></a>
+									<a class="btn-floating waves-effect waves-light modal-trigger" href="#addPopup" ng-click="setMode(true);"><i class="material-icons">add</i></a>
 								</th>
 							</tr>
 						</thead>
@@ -44,7 +44,7 @@
 								<td  ng-click="redirect(book.id);">{{book.type}}</td>
 								<td>
 									<button class="btn red lighten-2 waves-effect" ng-click="removeBook(book.id, true);">
-										Remove
+										消す
 									</button>
 								</td>
 							</tr>
@@ -61,7 +61,7 @@
 								<th>作者</th>
 								<th>タイプ</th>
 								<th>
-									<a class="btn-floating waves-effect waves-light red lighten-2 modal-trigger" href="#addPopup" ng-click="setMode(false);"><i class="material-icons">add</i></a>
+									<a class="btn-floating waves-effect waves-light modal-trigger" href="#addPopup" ng-click="setMode(false);"><i class="material-icons">add</i></a>
 								</th>
 							</tr>
 						</thead>
@@ -75,7 +75,7 @@
 								<td>{{book.type}}</td>
 								<td>
 									<button class="btn red lighten-2 waves-effect" ng-click="removeBook(book.id);">
-										Remove
+										消す
 									</button>
 								</td>
 							</tr>
@@ -88,7 +88,7 @@
 
 	<div id="addPopup" class="modal">
 		<div class="modal-content">
-			<h4 class="center-align">Add New Book</h4>
+			<h4 class="center-align">新しい本を追加する</h4>
 
 			<form>
 				<div class="row">
@@ -96,13 +96,13 @@
 						<i class="mdi-action-search prefix"></i>
 						<input id="book-title" type="search" ng-model="searchString" ng-change="log();">
 						<label for="book-title">
-							Search for book title
+							本のタイトルを検索する
 						</label>
 					</div>
 				</div>
 
 				<div>
-					{{results.length}} Result
+					{{results.length}} 結果
 					<ul class="collection">
 						<li class="collection-item avatar" ng-repeat="result in results">
 							<img ng-src="{{result.volumeInfo.imageLinks.smallThumbnail}}" alt="" style="width:37px;border-radius:0px;" class="circle">

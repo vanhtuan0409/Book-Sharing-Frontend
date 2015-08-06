@@ -1,12 +1,12 @@
 	<div class="modal-content">
-		<h4 class="center-align">Request Borrow</h4>
+		<h4 class="center-align">借りる為に連絡をします</h4>
 		<div class="row">
 			<div class="col l2">
 				<img ng-src="{{borrowUser.url}}" alt="" class="responsive-img circle">
 			</div>
 			<div class="col l10">
-				<p><b>Request from: </b>{{borrowUser.name}} ({{borrowUser.email}})</p>
-				<p><b>Book: </b>{{borrowBook.bookname}}</p>
+				<p><b>〜からのリクエスト: </b>{{borrowUser.name}} ({{borrowUser.email}})</p>
+				<p><b>本: </b>{{borrowBook.bookname}}</p>
 			</div>
 		</div>
 		<div class="divider"></div>
@@ -15,6 +15,6 @@
 		<textarea ng-model="borrowMessage" class="materialize-textarea" length="120" placeholder="Send your message"></textarea>
 	</div>
 	<div class="modal-footer">
-		<a class="modal-action modal-close waves-effect waves-green btn">Cancel</a>
-		<a ng-click="submit();" class="modal-action modal-close waves-effect waves-green btn" style="margin-right:10px;">Send your request</a>
+		<a class="modal-action modal-close waves-effect waves-green btn">キャンセル</a>
+		<a ng-click="submit();" class="modal-action modal-close waves-effect waves-green btn" style="margin-right:10px;">リクエストを送信します</a>
 	</div>

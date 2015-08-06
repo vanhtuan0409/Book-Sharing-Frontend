@@ -123,6 +123,8 @@ angular.module('myApp.comment', [])
 			}
 			$scope.getMessage();
 
+
+			$scope.commentMsg = '';
 			$scope.sendMsg = function(){
 				if($scope.borrowId && $scope.commentMsg.length>0 && $scope.toUser){
 					$http.post(
