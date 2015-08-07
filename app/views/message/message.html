@@ -19,31 +19,31 @@
 					<ul id="breadcrumb" class="left">
 						<li>
 							<div ng-switch on="borrowFlag">
-								<a ng-switch-when="true" href="#/borrow">Borrow</a>
-								<a ng-switch-when="false" href="#/lend">Lend</a>
+								<a ng-switch-when="true" href="#/borrow">{{'BORROW' | translate}}</a>
+								<a ng-switch-when="false" href="#/lend">{{'LEND' | translate}}</a>
 							</div>
 						</li>
 						<li>
 							<a href="">{{request.book.bookname}}</a>
 						</li>
 					</ul>
-					<button class="btn waves-effect right red lighten-2" style="margin-top: 1em;" ng-click="deleteRequest(request.id);" ng-if="request.status != 'closed'">Close</button>
-					<button class="btn waves-effect right" style="margin:1em 1em 0 0;" ng-click="acceptRequest(request.id)" ng-if="request.status == 'init'">Accept</button>
+					<button class="btn waves-effect right red lighten-2" style="margin-top: 1em;" ng-click="deleteRequest(request.id);" ng-if="request.status != 'closed'">{{'CLOSE' | translate}}</button>
+					<button class="btn waves-effect right" style="margin:1em 1em 0 0;" ng-click="acceptRequest(request.id)" ng-if="request.status == 'init'">{{'ACCEPT' | translate}}</button>
 				</div>
 				<div class="divider"></div>
 				<div class="row request-info" style="">
 					<div class="col l10">
 						<div ng-switch on="borrowFlag">
-							<p ng-switch-when="true">You want to borrow from <img ng-src="{{request.toUser.url}}" alt="" class="circle" style="max-width:2em!important"> <b>{{request.toUser.name}}</b>({{request.toUser.email}}) the book <b>{{request.book.bookname}}</b></p>
-							<p ng-switch-when="false"><b>{{request.fromUser.name}}</b>({{request.fromUser.email}}) want to borrow your book <b>{{request.book.bookname}}</b></p>
+							<p ng-switch-when="true" translate="BORROW_MESSAGE" translate-values="{toUser:request.toUser.name, email:request.toUser.email, book:request.book.bookname}"></p>
+							<p ng-switch-when="false" translate="LEND_MESSAGE" translate-values="{fromUser:request.fromUser.name, email:request.fromUser.email, book:request.book.bookname}"></p>
 						</div>
 						<div class="row" style="margin-bottom: 0px;">
 							<div class="col l6">
-								<label for="meetUpDate" class="black-text">Meet up Date</label>
+								<label for="meetUpDate" class="black-text">{{'MEET_UP_DATE' | translate}}</label>
 								<input type="text" class="datepicker" ng-model="startDate">
 							</div>
 							<div class="col l6">
-								<label for="returnDate" class="black-text">Return Date</label>
+								<label for="returnDate" class="black-text">{{'RETURN_DATE' | translate}}</label>
 								<input type="text" class="datepicker" ng-model="returnDate">
 							</div>
 						</div>

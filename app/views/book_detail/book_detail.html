@@ -6,9 +6,9 @@
 			</div>
 			<div class="col l9">
 				<h3>{{book.bookname}}</h3>
-				<p><b>作者: </b>{{book.author.join(', ')}}</p>
-				<p><b>タイプ: </b>{{book.type}}</p>
-				<p><b>説明: </b>{{book.description}}</p>
+				<p><b>{{'BOOK_NAME' | translate}}: </b>{{book.author.join(', ')}}</p>
+				<p><b>{{'BOOK_TYPE' | translate}}: </b>{{book.type}}</p>
+				<p><b>{{'DESCRIPTION' | translate}}: </b>{{book.description}}</p>
 			</div>
 		</div>
 	</div>
@@ -17,7 +17,7 @@
 		<div class="col l4">
 			<div class="card owner">
 			<div class="card-content">
-				<div class="card-title black-text">この本の所有者</div>
+				<div class="card-title black-text">{{'INFORMATION' | translate}}</div>
 				<div class="divider"></div>
 				
 				<div ng-repeat="owner in book.owners">
@@ -29,7 +29,7 @@
 						<div><b>{{owner.name}}</b></div>
 						<button ng-click="jLoader.openModal('borrowPopup');setBorrow(owner, book);"
 							class="btn waves-effect modal-trigger">
-							借りる
+							{{'BORROW' | translate}}
 						</button>
 					</div>
 				</div>

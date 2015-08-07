@@ -4,22 +4,22 @@
 	<div class="row">
 		<div class="col l3">
 			<div class="card-panel sidebar">
-				<div class="sidebar-item"><a href="">プロフィール</a></div>
+				<div class="sidebar-item"><a href="">{{'PROFILE' | translate}}</a></div>
 				<div class="divider"></div>
-				<div class="sidebar-item"><a href="#/manage-book">本の管理</a></div>
+				<div class="sidebar-item"><a href="#/manage-book">{{'BOOK_MANAGE' | translate}}</a></div>
 				<div class="divider"></div>
-				<div class="sidebar-item"><a href="#/borrow">あなたが借りたい本</a></div>
+				<div class="sidebar-item"><a href="#/borrow">{{'BORROW_REQUEST' | translate}}</a></div>
 				<div class="divider"></div>
-				<div class="sidebar-item active"><a href="#/lend">あなたにリクエストが届いている本</a></div>
+				<div class="sidebar-item active"><a href="#/lend">{{'LEND_REQUEST' | translate}}</a></div>
 			</div>
 		</div>
 		<div class="col l9">
 			<div class="card-panel">
 				<div class="row">
 					<ul class="tabs">
-						<li class="tab col s4"><a class="black-text" href="#all">覧</a></li>
-						<li class="tab col s4"><a class="active black-text" href="#active">貸出中</a></li>
-						<li class="tab col s4"><a class="black-text" href="#complete">完了</a></li>
+						<li class="tab col s4"><a class="black-text" href="#all">{{'ALL' | translate}}</a></li>
+						<li class="tab col s4"><a class="active black-text" href="#active">{{'ACTIVE' | translate}}</a></li>
+						<li class="tab col s4"><a class="black-text" href="#complete">{{'COMPLETE' | translate}}</a></li>
 					</ul>
 				</div>
 				
@@ -30,35 +30,35 @@
 							<img ng-src="{{request.book.url}}" alt="" class="responsive-img">
 						</div>
 						<div class="col l7">
-							<div><b>{{request.fromUser.name}}</b>({{request.fromUser.email}}) want to borrow your book <b>{{request.book.bookname}}</b></div>
+							<div translate="LEND_MESSAGE" translate-values="{fromUser:request.fromUser.name, email:request.fromUser.email, book:request.book.bookname}"></div>
 							<div>
 								<div class="left">
-									<i class="fa fa-calendar"></i> 待ち合わせ日:
+									<i class="fa fa-calendar"></i> {{'MEET_UP_DATE' | translate}}:
 									<i>{{request.startDate.substring(0,10)}}</i>
 								</div>
 								<div class="right">
-									<i class="fa fa-calendar"></i> 返却日:
+									<i class="fa fa-calendar"></i> {{'RETURN_DATE' | translate}}:
 									<i>{{request.returnDate.substring(0,10)}}</i>
 								</div>
 							</div>
 							<div style="clear:both;">
-								メッセージ:
+								{{'MESSAGE' | translate}}:
 								<span ng-repeat="m in request.messages | orderBy:updatedAt:true | limitTo:1">
 									{{m.message | limitTo: 35}}{{m.messeage > 35 ? '...' : ''}}
 								</span>
-								<a href="#/message?borrow={{request.id}}">もっと見る...</a>
+								<a href="#/message?borrow={{request.id}}">{{'VIEW_MORE' | translate}}</a>
 							</div>
 						</div>
 						<div class="col l4">
 							<div ng-if="request.status == 'init'">
-								<a class="btn waves-effect" style="padding: 0 1em" ng-click="acceptRequest(request.id);">同意</a>
-								<a class="btn grey lighten-2 black-text" ng-click="deleteRequest(request.id);" style="padding: 0 1em">消す</a>
+								<a class="btn waves-effect" style="padding: 0 1em" ng-click="acceptRequest(request.id);">{{'ACCEPT' | translate}}</a>
+								<a class="btn grey lighten-2 black-text" ng-click="deleteRequest(request.id);" style="padding: 0 1em">{{'DELETE' | translate}}</a>
 							</div>
 							<div ng-if="request.status == 'closed'">
-								<a class="btn disabled">Closed</a>
+								<a class="btn disabled">{{'CLOSED' | translate}}</a>
 							</div>
 							<div ng-if="request.status == 'ongoing'">
-								<a class="btn disabled">Accepted</a>
+								<a class="btn disabled">{{'ACCEPTED' | translate}}</a>
 							</div>
 						</div>
 					</div>
@@ -73,32 +73,32 @@
 							<img ng-src="{{request.book.url}}" alt="" class="responsive-img">
 						</div>
 						<div class="col l7">
-							<div><b>{{request.fromUser.name}}</b>({{request.fromUser.email}}) want to borrow your book <b>{{request.book.bookname}}</b></div>
+							<div translate="LEND_MESSAGE" translate-values="{fromUser:request.fromUser.name, email:request.fromUser.email, book:request.book.bookname}"></div>
 							<div>
 								<div class="left">
-									<i class="fa fa-calendar"></i> 待ち合わせ日:
+									<i class="fa fa-calendar"></i> {{'MEET_UP_DATE' | translate}}:
 									<i>{{request.startDate.substring(0,10)}}</i>
 								</div>
 								<div class="right">
-									<i class="fa fa-calendar"></i> 返却日:
+									<i class="fa fa-calendar"></i> {{'RETURN_DATE' | translate}}:
 									<i>{{request.returnDate.substring(0,10)}}</i>
 								</div>
 							</div>
 							<div style="clear:both;">
-								メッセージ:
+								{{'MESSAGE' | translate}}:
 								<span ng-repeat="m in request.messages | orderBy:updatedAt:true | limitTo:1">
 									{{m.message | limitTo: 35}}{{m.messeage > 35 ? '...' : ''}}
 								</span>
-								<a href="#/message?borrow={{request.id}}">もっと見る...</a>
+								<a href="#/message?borrow={{request.id}}">{{'VIEW_MORE' | translate}}</a>
 							</div>
 						</div>
 						<div class="col l4">
 							<div ng-if="request.status == 'init'">
-								<a class="btn waves-effect" style="padding: 0 1em" ng-click="acceptRequest(request.id);">同意</a>
-								<a class="btn grey lighten-2 black-text" ng-click="deleteRequest(request.id);" style="padding: 0 1em">消す</a>
+								<a class="btn waves-effect" style="padding: 0 1em" ng-click="acceptRequest(request.id);">{{'ACCEPT' | translate}}</a>
+								<a class="btn grey lighten-2 black-text" ng-click="deleteRequest(request.id);" style="padding: 0 1em">{{'DELETE' | translate}}</a>
 							</div>
 							<div ng-if="request.status == 'ongoing'">
-								<a class="btn disabled">Accepted</a>
+								<a class="btn disabled">{{'ACCEPTED' | translate}}</a>
 							</div>
 						</div>
 					</div>
@@ -113,27 +113,27 @@
 							<img ng-src="{{request.book.url}}" alt="" class="responsive-img">
 						</div>
 						<div class="col l7">
-							<div><b>{{request.fromUser.name}}</b>({{request.fromUser.email}}) want to borrow your book <b>{{request.book.bookname}}</b></div>
+							<div translate="LEND_MESSAGE" translate-values="{fromUser:request.fromUser.name, email:request.fromUser.email, book:request.book.bookname}"></div>
 							<div>
 								<div class="left">
-									<i class="fa fa-calendar"></i> 待ち合わせ日:
+									<i class="fa fa-calendar"></i> {{'MEET_UP_DATE' | translate}}:
 									<i>{{request.startDate.substring(0,10)}}</i>
 								</div>
 								<div class="right">
-									<i class="fa fa-calendar"></i> 返却日:
+									<i class="fa fa-calendar"></i> {{'RETURN_DATE' | translate}}:
 									<i>{{request.returnDate.substring(0,10)}}</i>
 								</div>
 							</div>
 							<div style="clear:both;">
-								メッセージ:
+								{{'MESSAGE' | translate}}:
 								<span ng-repeat="m in request.messages | orderBy:updatedAt:true | limitTo:1">
 									{{m.message | limitTo: 35}}{{m.messeage > 35 ? '...' : ''}}
 								</span>
-								<a href="#/message?borrow={{request.id}}">もっと見る...</a>
+								<a href="#/message?borrow={{request.id}}">{{'VIEW_MORE' | translate}}</a>
 							</div>
 						</div>
 						<div class="col l4">
-							<a class="btn disabled">Closed</a>
+							<a class="btn disabled">{{'CLOSED' | translate}}</a>
 						</div>
 					</div>
 					<div ng-if="!$last" class="divider"></div>

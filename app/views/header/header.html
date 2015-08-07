@@ -4,7 +4,7 @@
         <div class="left">
             <form>
                 <div class="input-field">
-                    <input type="search" placeholder="本を探します" id="search-field" class="field" required maxlength="">
+                    <input type="search" placeholder="{{'HEADER_SEARCH_PLACEHOLDER' | translate}}" id="search-field" class="field" required maxlength="">
                     <label for="search-field"><i class="mdi-action-search"></i></label>
                 </div>
             </form>
@@ -27,13 +27,13 @@
                 </a>
             </li>
             <li ng-if="user == null">
-                <a href="" ng-click="login();">FBでログイン</a>
+                <a href="" ng-click="login();">{{'LOGIN' | translate}}</a>
             </li>
         </ul>
         <ul id="user-header-dropdown" class="dropdown-content">
-            <li><a href="#/profile/{{user.id}}">プロフィールを見る</a></li>
-            <li><a href="#/manage-book">私の本の管理 </a></li>
-            <li><a href="" ng-click="logout();">ログアウト</a></li>
+            <li><a href="#/profile/{{user.id}}">{{'PROFILE' | translate}}</a></li>
+            <li><a href="#/manage-book">{{'MANGE_BOOK' | translate}}</a></li>
+            <li><a href="" ng-click="logout();">{{'LOGOUT' | translate}}</a></li>
         </ul>
     </div>
 </nav>

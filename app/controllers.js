@@ -256,7 +256,7 @@ angular.module('myApp.home', [])
 	}
 
 	$scope.getAllBook = function(){
-		$http.get($appConfig.API_URL+'/book')
+		$http.get($appConfig.API_URL+'/book?sort=updatedAt DESC')
 		.success(function(data){
 			if (!data.error){
 				$scope.books = data.content;

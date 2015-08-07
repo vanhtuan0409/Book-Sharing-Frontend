@@ -5,11 +5,11 @@
 		<div class="col l3">
 			<div class="card basic-information">
 				<div class="card-content">
-					<div class="card-title black-text">情報</div>
+					<div class="card-title black-text">{{'INFORMATION' | translate}}</div>
 					<div class="divider"></div>
-					<p><b>名前: </b>{{user.name}}</p>
-					<p><b>場所: </b>{{user.location}}</p>
-					<p><b>評判: </b>{{user.point}}</p>
+					<p><b>{{'NAME' | translate}}: </b>{{user.name}}</p>
+					<p><b>{{'LOCATION' | translate}}: </b>{{user.location}}</p>
+					<p><b>{{'REPUTATION' | translate}}: </b>{{user.point}}</p>
 				</div>
 			</div>
 
@@ -32,9 +32,9 @@
 			<div class="card-panel">
 				<div class="row">
 					<ul class="tabs">
-						<li class="tab col s4"><a class="active black-text" href="#book">本</a></li>
-						<li class="tab col s4"><a class="black-text" href="#recommendation">おすすめの本</a></li>
-						<li class="tab col s4"><a class="black-text" href="#user-rating">おすすめ度</a></li>
+						<li class="tab col s4"><a class="active black-text" href="#book">{{'BOOK' | translate}}</a></li>
+						<li class="tab col s4"><a class="black-text" href="#recommendation">{{'RECOMMENDATION' | translate}}</a></li>
+						<li class="tab col s4"><a class="black-text" href="#user-rating">{{'USER_RATING' | translate}}</a></li>
 					</ul>
 				</div>
 
@@ -42,10 +42,10 @@
 					<table class="bordered centered responsive-table book-list">
 						<thead>
 							<tr>
-								<th>本の表紙</th>
-								<th>本の名前</th>
-								<th>作者</th>
-								<th>タイプ</th>
+								<th>{{'BOOK_COVER' | translate}}</th>
+								<th>{{'BOOK_NAME' | translate}}</th>
+								<th>{{'BOOK_AUTHOR' | translate}}</th>
+								<th>{{'BOOK_TYPE' | translate}}</th>
 								<th ng-if="currentUser.id != user.id"></th>
 							</tr>
 						</thead>
@@ -61,7 +61,7 @@
 									<button 
 										class="btn waves-effect modal-trigger"
 										ng-click="jLoader.openModal('borrowPopup');setBorrow(user,book);">
-										借りる
+										{{'BORROW' | translate}}
 									</button>
 								</td>
 							</tr>
@@ -73,10 +73,10 @@
 					<table class="bordered centered responsive-table book-list">
 						<thead>
 							<tr>
-								<th>本の表紙</th>
-								<th>本の名前</th>
-								<th>作者</th>
-								<th>タイプ</th>
+								<th>{{'BOOK_COVER' | translate}}</th>
+								<th>{{'BOOK_NAME' | translate}}</th>
+								<th>{{'BOOK_AUTHOR' | translate}}</th>
+								<th>{{'BOOK_TYPE' | translate}}</th>
 							</tr>
 						</thead>
 						<tbody>

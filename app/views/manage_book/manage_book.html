@@ -4,31 +4,31 @@
 	<div class="row">
 		<div class="col l3">
 			<div class="card-panel sidebar">
-				<div class="sidebar-item"><a href="">プロフィール</a></div>
+				<div class="sidebar-item"><a href="">{{'PROFILE' | translate}}</a></div>
 				<div class="divider"></div>
-				<div class="sidebar-item active"><a href="#/manage-book">本の管理</a></div>
+				<div class="sidebar-item active"><a href="#/manage-book">{{'BOOK_MANAGE' | translate}}</a></div>
 				<div class="divider"></div>
-				<div class="sidebar-item"><a href="#/borrow">あなたが借りたい本</a></div>
+				<div class="sidebar-item"><a href="#/borrow">{{'BORROW_REQUEST' | translate}}</a></div>
 				<div class="divider"></div>
-				<div class="sidebar-item"><a href="#/lend">あなたにリクエストが届いている本</a></div>
+				<div class="sidebar-item"><a href="#/lend">{{'LEND_REQUEST' | translate}}</a></div>
 			</div>
 		</div>
 		<div class="col l9">
 			<div class="card-panel">
 				<div class="row">
 					<ul class="tabs">
-						<li class="tab col s6"><a class="active black-text" href="#book" ng-click="setMode(true);">本</a></li>
-						<li class="tab col s6"><a class="black-text" href="#recommendation" ng-click="setMode(false);">おすすめの本</a></li>
+						<li class="tab col s6"><a class="active black-text" href="#book" ng-click="setMode(true);">{{'BOOK' | translate}}</a></li>
+						<li class="tab col s6"><a class="black-text" href="#recommendation" ng-click="setMode(false);">{{'RECOMMENDATION' | translate}}</a></li>
 					</ul>
 				</div>
 				<div id="book">
 					<table class="bordered centered responsive-table book-list">
 						<thead>
 							<tr>
-								<th>本の表紙</th>
-								<th>本の名前</th>
-								<th>作者</th>
-								<th>タイプ</th>
+								<th>{{'BOOK_COVER' | translate}}</th>
+								<th>{{'BOOK_NAME' | translate}}</th>
+								<th>{{'BOOK_AUTHOR' | translate}}</th>
+								<th>{{'BOOK_TYPE' | translate}}</th>
 								<th>
 									<a class="btn-floating waves-effect waves-light modal-trigger" href="#addPopup" ng-click="setMode(true);"><i class="material-icons">add</i></a>
 								</th>
@@ -44,7 +44,7 @@
 								<td  ng-click="redirect(book.id);">{{book.type}}</td>
 								<td>
 									<button class="btn red lighten-2 waves-effect" ng-click="removeBook(book.id, true);">
-										消す
+										{{'REMOVE' | translate}}
 									</button>
 								</td>
 							</tr>
@@ -56,10 +56,10 @@
 					<table class="bordered centered responsive-table book-list">
 						<thead>
 							<tr>
-								<th>本の表紙</th>
-								<th>本の名前</th>
-								<th>作者</th>
-								<th>タイプ</th>
+								<th>{{'BOOK_COVER' | translate}}</th>
+								<th>{{'BOOK_NAME' | translate}}</th>
+								<th>{{'BOOK_AUTHOR' | translate}}</th>
+								<th>{{'BOOK_TYPE' | translate}}</th>
 								<th>
 									<a class="btn-floating waves-effect waves-light modal-trigger" href="#addPopup" ng-click="setMode(false);"><i class="material-icons">add</i></a>
 								</th>
@@ -75,7 +75,7 @@
 								<td>{{book.type}}</td>
 								<td>
 									<button class="btn red lighten-2 waves-effect" ng-click="removeBook(book.id);">
-										消す
+										{{'REMOVE' | translate}}
 									</button>
 								</td>
 							</tr>
@@ -88,7 +88,7 @@
 
 	<div id="addPopup" class="modal">
 		<div class="modal-content">
-			<h4 class="center-align">新しい本を追加する</h4>
+			<h4 class="center-align">{{'ADD_BOOK' | translate}}</h4>
 
 			<form>
 				<div class="row">
@@ -96,26 +96,26 @@
 						<i class="mdi-action-search prefix"></i>
 						<input id="book-title" type="search" ng-model="searchString" ng-change="log();">
 						<label for="book-title">
-							本のタイトルを検索する
+							{{'SEARCH_BOOK' | translate}}
 						</label>
 					</div>
 				</div>
 
 				<div>
-					{{results.length}} 結果
+					{{results.length}} {{'RESULT' | translate}}
 					<ul class="collection">
 						<li class="collection-item avatar" ng-repeat="result in results">
 							<img ng-src="{{result.volumeInfo.imageLinks.smallThumbnail}}" alt="" style="width:37px;border-radius:0px;" class="circle">
 							<span class="title"><b>{{result.volumeInfo.title | limitTo: 20}}</b></span>
 							<p>{{result.volumeInfo.authors.join(', ') | limitTo: 20}}</p>
-							<a class="btn waves-effect secondary-content" ng-click="addBook(result)">Add</a>
+							<a class="btn waves-effect secondary-content" ng-click="addBook(result)">{{'ADD' | translate}}</a>
 						</li>
 					</ul>
 				</div>
 			</form>
 		</div>
 		<div class="modal-footer">
-			<a class="modal-action modal-close waves-effect waves-green btn">Cancel</a>
+			<a class="modal-action modal-close waves-effect waves-green btn">{{'CANCEL' | translate}}</a>
 		</div>
 	</div>
 </div>
