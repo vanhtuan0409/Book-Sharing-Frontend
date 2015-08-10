@@ -9,7 +9,7 @@ angular.module('myApp.search', [])
 	});
 }])
 
-.controller('SearchCtrl', ['$scope', function($scope) {
+.controller('SearchCtrl', ['$scope', '$routeParams', '$http', '$appConfig', function($scope, $routeParams, $http, $config) {
 	$scope.loadJquery = function(){
 		$('ul.tabs').tabs();
 
@@ -18,4 +18,22 @@ angular.module('myApp.search', [])
 		})
 	}
 	$scope.loadJquery();
+
+	var query = $routeParams.q;
+	console.log($config.API_URL + '/book?where={"bookname":{"contains":"'+query+'"}}');
+
+
+	$http.get($config.API_URL + '/book?where={"bookname":{"contains":"'+query+'"}}')
+	.success(function(data){
+		if(!data.error){
+			$scope.books = data.content;
+		}
+	})
+
+	$http.get($config.API_URL + '/user?where={"name":{"contains":"'+query+'"}}')
+	.success(function(data){
+		if(!data.error){
+			$scope.peoples = data.content;
+		}
+	})
 }]);

@@ -1,77 +1,53 @@
+<div class="home-tab">
+	<div class="tab-wrapper">
+		<ul class="tabs">
+			<li class="tab"><a class="active black-text" href="#book">{{'BOOK' | translate}}</a></li>
+			<li class="tab"><a class="black-text" href="#people">{{'PEOPLE' | translate}}</a></li>
+		</ul>
+	</div>
+</div>
 <div class="container">
-	<div class="card-panel">
+	<div id="people">
 		<div class="row">
-			<div class="col s12">
-				<ul class="tabs">
-					<li class="tab col s3"><a class="active black-text" href="#around">Around you</a></li>
-					<li class="tab col s3"><a class="black-text" href="#people">People</a></li>
-					<li class="tab col s3"><a class="black-text" href="#book">Book</a></li>
-					<li class="tab col s3"><a class="black-text" href="#group">Group</a></li>
-				</ul>
+			<div class="col l3" ng-repeat="people in peoples">
+				<div class="card book-card">
+					<div class="card-image">
+						<a href="">
+							<img ng-src="{{people.url}}" class="responsive-img">
+						</a>
+					</div>
+					<div class="card-content">
+						<div><b>{{people.name | limitTo: 20}}{{book.bookname.length > 20 ? '...' : ''}}</b></div>
+						<div>{{people.email | limitTo: 20}}{{people.email.length > 20 ? '...' : ''}}</div>
+					</div>
+				</div>
 			</div>
-			<div id="around" class="col s12">
-				<table class="bordered centered responsive-table search-list">
-					<thead>
-						<tr>
-							<th>Book Cover</th>
-							<th>Book Name</th>
-							<th>Author</th>
-							<th>Owner</th>
-							<th>Location</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<img src="img/book/book1.jpg" alt="" class="responsive-img">
-							</td>
-							<td>Fake Id</td>
-							<td>Lamar Giles</td>
-							<td>Huy Nguyen</td>
-							<td>Minatomirai Center Building</td>
-						</tr>
-						<tr>
-							<td>
-								<img src="img/book/book1.jpg" alt="" class="responsive-img">
-							</td>
-							<td>Fake Id</td>
-							<td>Lamar Giles</td>
-							<td>Huy Nguyen</td>
-							<td>Minatomirai Center Building</td>
-						</tr>
-						<tr>
-							<td>
-								<img src="img/book/book1.jpg" alt="" class="responsive-img">
-							</td>
-							<td>Fake Id</td>
-							<td>Lamar Giles</td>
-							<td>Huy Nguyen</td>
-							<td>Minatomirai Center Building</td>
-						</tr>
-						<tr>
-							<td>
-								<img src="img/book/book1.jpg" alt="" class="responsive-img">
-							</td>
-							<td>Fake Id</td>
-							<td>Lamar Giles</td>
-							<td>Huy Nguyen</td>
-							<td>Minatomirai Center Building</td>
-						</tr>
-						<tr>
-							<td>
-								<img src="img/book/book1.jpg" alt="" class="responsive-img">
-							</td>
-							<td>Fake Id</td>
-							<td>Lamar Giles</td>
-							<td>Huy Nguyen</td>
-							<td>Minatomirai Center Building</td>
-						</tr>
-					</tbody>
-				</table>
+		</div>
+	</div>
+
+	<div id="book">
+		<div class="row">
+			<div class="col l3" ng-repeat="book in books">
+				<div class="card book-card">
+					<div class="card-image">
+						<a href="#/book/{{book.id}}">
+							<img ng-src="{{book.url}}" class="responsive-img">
+						</a>
+					</div>
+					<div class="card-content">
+						<div class="friend-owner">
+							<span ng-repeat="owner in book.owners | limitTo: 2">
+								<a href="#/profile/{{owner.id}}">
+									<img ng-src="{{owner.url}}" class="circle friend-owner">
+								</a>
+							</span>
+							<span ng-if="book.owners.length > 2" class="more-owner">{{book.owners.length-2}}+</span>
+						</div>
+						<div><b>{{book.bookname | limitTo: 20}}{{book.bookname.length > 20 ? '...' : ''}}</b></div>
+						<div>{{book.author.join(', ') | limitTo: 20}}{{book.author.join(', ').length > 20 ? '...' : ''}}</div>
+					</div>
+				</div>
 			</div>
-			<div id="people" class="col s12">Test 2</div>
-			<div id="book" class="col s12">Test 2</div>
-			<div id="group" class="col s12">Test 4</div>
 		</div>
 	</div>
 </div>

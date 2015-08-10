@@ -10,9 +10,17 @@
 			</div>
 		</div>
 		<div class="divider"></div>
-		<input ng-model="dateMeet" type="date" class="datepicker left" placeholder="Choose your meet up date" required>
-		<input ng-model="dateReturn" type="date" class="datepicker right" placeholder="Choose your book return date" required>
-		<textarea ng-model="borrowMessage" class="materialize-textarea" length="120" placeholder="Send your message"></textarea>
+		<div class="row">
+			<div class="col l6" style="outline:none;">
+				<label for="meetup" class="black-text">{{'CHOOSE_MEETUP' | translate}}</label>
+				<input id="meetup" ng-model="dateMeet" type="date" class="datepicker" required >
+			</div>
+			<div class="col l6" style="outline:none;">
+				<label for="return" class="black-text">{{'CHOOSE_RETURN' | translate}}</label>
+				<input id="meetup" ng-model="dateReturn" type="date" class="datepicker" required>
+			</div>
+			<textarea ng-model="borrowMessage" class="materialize-textarea" length="120" placeholder="{{'POST_YOUR_COMMENT' | translate}}"></textarea>
+		</div>
 	</div>
 	<div class="modal-footer">
 		<a class="modal-action modal-close waves-effect waves-green btn">{{'CANCEL' | translate}}</a>

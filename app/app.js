@@ -81,6 +81,9 @@ angular.module('myApp', [
 		'BORROW': 'Borrow',
 		'LEND': 'Lend',
 		'POST_YOUR_COMMENT': 'Post your comment',
+		'CHOOSE_MEETUP': 'Choose your meet up date',
+		'CHOOSE_RETURN': 'Choose your return date',
+		'PEOPLE': 'People',
 	});
 
 	$translateProvider.translations('ja', {
@@ -124,8 +127,8 @@ angular.module('myApp', [
 		'LEND_MESSAGE': '<b>{{fromUser}}</b>({{email}})はあなたの<b>{{book}}</b>を借りたいです',
 		'SEND': '送る',
 		'ACCEPT': '同意',
-		'ACCEPTED': '同意',
-		'CLOSED': '閉じる',
+		'ACCEPTED': '同意された',
+		'CLOSED': '閉めた',
 		'DELETE': '消す',
 		'REMOVE': '消す',
 		'CANCEL': 'キャンセル',
@@ -133,9 +136,12 @@ angular.module('myApp', [
 		'REQUEST_TO_BORROW': '借りる為に連絡をします',
 		'REQUEST_FROM': 'からのリクエスト',
 		'SEND_YOUR_REQUEST': 'リクエストを送信します',
-		'BORROW': 'Borrow',
-		'LEND': 'Lend',
+		'BORROW': '借りる',
+		'LEND': '貸しる',
 		'POST_YOUR_COMMENT': 'コメントを投稿する',
+		'CHOOSE_MEETUP': '待ち合わせ日を選ぶ',
+		'CHOOSE_RETURN': '返却日を選ぶ',
+		'PEOPLE': 'People',
 	});
 
 	$translateProvider.preferredLanguage('ja');	

@@ -12,9 +12,6 @@ angular.module('myApp.services', ['ngCookies'])
 				selectMonths: true,
 				format: 'yyyy-mm-dd',
 				container: 'body',
-				onOpen: function () {
-					this.clear();
-				},
 				onSet: function () {
 					if(this.get('value').length > 0){
 						this.close();

@@ -36,6 +36,10 @@ angular.module('myApp.header', ['facebook'])
 			    	scope: ['email', 'public_profile', 'user_friends']
 			    });
 			};
+
+			$scope.search = function(){
+				window.location = "#/search?q="+$scope.query;
+			}
 		}]
 	}
 }]);

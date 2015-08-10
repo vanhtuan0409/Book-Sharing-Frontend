@@ -17,6 +17,8 @@
 	</div>
 	
 	<div ng-if="comments.length>0" class="divider"></div>
+
+	<form ng-submit="sendMsg();">
 	<div class="input-field">
 		<input type="text" ng-model="commentMsg" placeholder="{{'POST_YOUR_COMMENT' | translate}}">
 		<span ng-if="commentMsg.length>0">
@@ -32,4 +34,5 @@
 			</a>
 		</span>
 	</div>
+	</form>
 </div>

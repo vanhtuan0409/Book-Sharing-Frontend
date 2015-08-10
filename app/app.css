@@ -1,7 +1,12 @@
 body{
   background-color: #ebeff2;
 }
-
+#abc:hover{
+  background-color:;
+}
+.tt-menu{
+  color: black;
+}
 #brand-name{
   padding: 0px 20px 0px 20px;
   position: relative;
@@ -13,6 +18,19 @@ body{
 }
 nav .nav-wrapper i{
   font-size: 20px!important;
+}
+
+textarea::-webkit-input-placeholder{
+  color: #616161;
+}
+textarea:-moz-placeholder{
+  color: #616161;
+}
+textarea::-moz-placeholder{
+  color: #616161;
+}
+textarea:-ms-input-placeholder{
+  color: #616161;
 }
 
 #header input[type=search]::-webkit-input-placeholder {
@@ -32,7 +50,7 @@ nav .nav-wrapper i{
 #header input[type=search]:focus::-webkit-input-placeholder {
  color: #bdbdbd;
 }
-#header input[type=search]:focus:-moz-placeholder { /* Firefox 18- */
+#header input[type=search]:focus:-moz-placeholder {  Firefox 18- 
  color: #bdbdbd;  
 }
 
@@ -57,6 +75,7 @@ nav .nav-wrapper i{
 #header input[type=search]:focus{
   background-color: #fff;
 }
+
 .container{
   padding-top: 50px;
   padding-bottom: 50px;
@@ -160,10 +179,6 @@ nav .nav-wrapper i{
 #borrowPopup{
   max-height: 80%;
 }
-#borrowPopup input.datepicker{
-  width: 45%;
-  display: inline-block;
-}
 .borrow-info{
   width: 100%;
   overflow: hidden;
@@ -223,7 +238,7 @@ nav .nav-wrapper i{
   color: #000!important;
 }
 .book-card .card-image{
-  height: 300px;
+  max-height: 300px;
   overflow: hidden;
 }
 .book-card .card-content{

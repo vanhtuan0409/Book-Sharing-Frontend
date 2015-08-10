@@ -13,6 +13,7 @@
     "angular-facebook": "latest",
     "angular-translate": "latest",
     "angular-mocks": "~1.4.0",
+    "typeahead.js": "latest",
     "html5-boilerplate": "~5.2.0"
   }
 }

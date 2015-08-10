@@ -12,8 +12,10 @@ angular.module('myApp.borrow_form', [])
 			$jQueryLoader.loadDatePicker();
 		},
 		controller: ['$scope', '$http',  '$auth', '$appConfig', function($scope, $http, $auth, $config){
-			$scope.dateMeet = '';
-			$scope.dateReturn = '';
+			$scope.dateMeet = new Date();
+			$scope.dateReturn = new Date();
+			$scope.dateReturn.setDate($scope.dateMeet.getDate() + 7);
+			
 			$scope.borrowMessage = '';
 
 			$scope.submit = function(){
