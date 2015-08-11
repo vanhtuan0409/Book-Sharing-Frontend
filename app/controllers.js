@@ -68,6 +68,33 @@ angular.module('myApp.book_detail', ['ngRoute'])
 	}]);
 'use strict';
 
+angular.module('myApp.comment', [])
+
+.directive('ngComment', ['$jQueryLoader', function($jQueryLoader) {
+	return {
+		restrict: 'E',
+		scope: {
+            comments: '=',
+            addMessage: '&'
+        },
+		trasclude: true,
+		replace: true,
+		templateUrl: 'views/comment/comment.html',
+		link: function($scope,element,attrs){
+		},
+		controller: ['$scope', '$http', '$auth', '$appConfig', function($scope, $http, $auth, $appConfig){
+			$scope.commentMsg = '';
+			$scope.sendMsg = function(){
+				if($scope.commentMsg != ''){
+					$scope.addMessage({msg: $scope.commentMsg});
+					$scope.commentMsg = '';
+				}
+			}
+		}]
+	}
+}]);
+'use strict';
+
 angular.module('myApp.borrow_form', [])
 
 .directive('borrowForm', ['$jQueryLoader', function($jQueryLoader) {
@@ -107,33 +134,6 @@ angular.module('myApp.borrow_form', [])
 				}).error(function(data){
 					console.log(data);
 				})
-			}
-		}]
-	}
-}]);
-'use strict';
-
-angular.module('myApp.comment', [])
-
-.directive('ngComment', ['$jQueryLoader', function($jQueryLoader) {
-	return {
-		restrict: 'E',
-		scope: {
-            comments: '=',
-            addMessage: '&'
-        },
-		trasclude: true,
-		replace: true,
-		templateUrl: 'views/comment/comment.html',
-		link: function($scope,element,attrs){
-		},
-		controller: ['$scope', '$http', '$auth', '$appConfig', function($scope, $http, $auth, $appConfig){
-			$scope.commentMsg = '';
-			$scope.sendMsg = function(){
-				if($scope.commentMsg != ''){
-					$scope.addMessage({msg: $scope.commentMsg});
-					$scope.commentMsg = '';
-				}
 			}
 		}]
 	}
@@ -294,18 +294,19 @@ angular.module('myApp.manage_book', [])
 				var imgUrl = null;
 				if(data.volumeInfo.hasOwnProperty('imageLinks')){
 					if(data.volumeInfo.imageLinks.hasOwnProperty('medium')){
-						imgUrl = data.volumeInfo.imageLinks.hasOwnProperty('medium');
+						imgUrl = data.volumeInfo.imageLinks.medium;
+						console.log(imgUrl);
 					} else {
-						imgUrl = data.volumeInfo.imageLinks.hasOwnProperty('thumbnail');
+						imgUrl = data.volumeInfo.imageLinks.thumbnail;
+						console.log(imgUrl);
 					}
 				}
-				if(!imgUrl) imgUrl= 'img/book/default.jpg'
+				if(!imgUrl) imgUrl= 'img/book/default.jpg';
 
 				var type = null;
 				if(data.volumeInfo.hasOwnProperty('categories')){
 					type = data.volumeInfo.categories[0];
 				}
-
 
 				var book = {
 					'bookname': data.volumeInfo.title,
@@ -336,7 +337,6 @@ angular.module('myApp.manage_book', [])
 			}
 			$http.delete(url)
 			.success(function(data){
-				console.log(data);
 				$("#addPopup").closeModal();
 				mode ? getBooks() : getRecommendation();
 			})

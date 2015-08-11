@@ -64,18 +64,19 @@ angular.module('myApp.manage_book', [])
 				var imgUrl = null;
 				if(data.volumeInfo.hasOwnProperty('imageLinks')){
 					if(data.volumeInfo.imageLinks.hasOwnProperty('medium')){
-						imgUrl = data.volumeInfo.imageLinks.hasOwnProperty('medium');
+						imgUrl = data.volumeInfo.imageLinks.medium;
+						console.log(imgUrl);
 					} else {
-						imgUrl = data.volumeInfo.imageLinks.hasOwnProperty('thumbnail');
+						imgUrl = data.volumeInfo.imageLinks.thumbnail;
+						console.log(imgUrl);
 					}
 				}
-				if(!imgUrl) imgUrl= 'img/book/default.jpg'
+				if(!imgUrl) imgUrl= 'img/book/default.jpg';
 
 				var type = null;
 				if(data.volumeInfo.hasOwnProperty('categories')){
 					type = data.volumeInfo.categories[0];
 				}
-
 
 				var book = {
 					'bookname': data.volumeInfo.title,
@@ -106,7 +107,6 @@ angular.module('myApp.manage_book', [])
 			}
 			$http.delete(url)
 			.success(function(data){
-				console.log(data);
 				$("#addPopup").closeModal();
 				mode ? getBooks() : getRecommendation();
 			})
