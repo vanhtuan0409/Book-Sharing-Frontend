@@ -10,6 +10,14 @@ angular.module('myApp.profile_banner', [])
 		},
 		trasclude: true,
 		replace: false,
-		templateUrl: 'views/profile_banner/profile_banner.html'
+		templateUrl: 'views/profile_banner/profile_banner.html',
+		controller: ['$scope', '$appConfig', '$http', function($scope, $appConfig, $http){
+			$http.get($appConfig.API_URL + "/user/"+$scope.user.id+"/stat")
+			.success(function(data){
+				if(!data.error){
+					$scope.stat = data.content;
+				}
+			})
+		}]
 	}
 }]);

@@ -10,40 +10,28 @@
 	<h1 style="font-size:30px"><a href="#/profile/{{user.id}}">{{user.name}}</a></h1>
 	<div class="divider" style="margin-top: 15px;"></div>
 	<div class="row">
-		<div class="col l2">
+		<div class="col l3">
 			<a href="#/profile">
-				<p style="font-size: 20px;">10</p>
+				<p style="font-size: 20px;">{{stat.book}}</p>
 				<p><b>{{'BOOK_OWNED' | translate}}</b></p>
 			</a>
 		</div>
-		<div class="col l2">
+		<div class="col l3">
 			<a href="#/borrow">
-				<p style="font-size: 20px;">5</p>
+				<p style="font-size: 20px;">{{stat.borrow}}</p>
 				<p><b>{{'BOOK_BORROW' | translate}}</b></p>
 			</a>
 		</div>
-		<div class="col l2">
+		<div class="col l3">
 			<a href="#/lend">
-				<p style="font-size: 20px;">6</p>
+				<p style="font-size: 20px;">{{stat.lend}}</p>
 				<p><b>{{'BOOK_LEND' | translate}}</b></p>
 			</a>
 		</div>
-		<div class="col l2">
+		<div class="col l3">
 			<a href="">
 				<p style="font-size: 20px;">100</p>
 				<p><b>{{'REPUTATION' | translate}}</b></p>
-			</a>
-		</div>
-		<div class="col l2">
-			<a href="">
-				<p style="font-size: 20px;">2</p>
-				<p><b>Follower</b></p>
-			</a>
-		</div>
-		<div class="col l2">
-			<a href="">
-				<p style="font-size: 20px;">5</p>
-				<p><b>Following</b></p>
 			</a>
 		</div>
 	</div>

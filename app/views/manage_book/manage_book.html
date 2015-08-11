@@ -90,11 +90,11 @@
 		<div class="modal-content">
 			<h4 class="center-align">{{'ADD_BOOK' | translate}}</h4>
 
-			<form>
+			<form ng-submit="log();">
 				<div class="row">
 					<div class="input-field col l12">
 						<i class="mdi-action-search prefix"></i>
-						<input id="book-title" type="search" ng-model="searchString" ng-change="log();">
+						<input id="book-title" type="search" ng-model="searchString">
 						<label for="book-title">
 							{{'SEARCH_BOOK' | translate}}
 						</label>
@@ -108,7 +108,7 @@
 							<img ng-src="{{result.volumeInfo.imageLinks.smallThumbnail}}" alt="" style="width:37px;border-radius:0px;" class="circle">
 							<span class="title"><b>{{result.volumeInfo.title | limitTo: 20}}</b></span>
 							<p>{{result.volumeInfo.authors.join(', ') | limitTo: 20}}</p>
-							<a class="btn waves-effect secondary-content" ng-click="addBook(result)">{{'ADD' | translate}}</a>
+							<a class="btn waves-effect secondary-content" ng-click="addBook(result.id)">{{'ADD' | translate}}</a>
 						</li>
 					</ul>
 				</div>

@@ -39,7 +39,6 @@ angular.module('myApp.book_detail', ['ngRoute'])
 		}
 		$scope.getBook();
 
-		$scope.commentUrl = $appConfig.API_URL + "/book_comment?book=" + $routeParams.id;
 		$scope.getMessage = function(){
 			$http.get($appConfig.API_URL + "/book_comment?book=" + $routeParams.id)
 			.success(function(data){
@@ -279,7 +278,7 @@ angular.module('myApp.manage_book', [])
 		}
 
 		$scope.log = function(){
-			var bookApi = "https://www.googleapis.com/books/v1/volumes?q="+$scope.searchString+"&projection=lite&maxResults=10&key=AIzaSyBTV6vCk7Ns6PQ0BT_BhaqorBlf253YwHs";
+			var bookApi = "https://www.googleapis.com/books/v1/volumes?q="+$scope.searchString+"&projection=lite&zoom=0&maxResults=10&key=AIzaSyBTV6vCk7Ns6PQ0BT_BhaqorBlf253YwHs";
 			$http.get(bookApi)
 			.success(function(data){
 				$scope.results = data.items;
@@ -289,27 +288,45 @@ angular.module('myApp.manage_book', [])
 			})
 		}
 
-		$scope.addBook = function(bookObj){
-			var book = {
-				'bookname': bookObj.volumeInfo.title,
-				'author': bookObj.volumeInfo.authors,
-				'url': bookObj.volumeInfo.imageLinks.thumbnail,
-				'description': bookObj.volumeInfo.description,
-				'type': bookObj.volumeInfo.mainCategory,
-				'isBook': mode
-			};
-
-			console.log(mode);
-
-			var url = $config.API_URL + "/user/" + $scope.user.id + "/addBook";
-			$http.post(url, book)
+		$scope.addBook = function(bookId){
+			$http.get("https://www.googleapis.com/books/v1/volumes/"+bookId)
 			.success(function(data){
-				$("#addPopup").closeModal();
-				mode ? getBooks() : getRecommendation();
-			}).error(function(data){
-				console.log(data);
-			})
+				var imgUrl = null;
+				if(data.volumeInfo.hasOwnProperty('imageLinks')){
+					if(data.volumeInfo.imageLinks.hasOwnProperty('medium')){
+						imgUrl = data.volumeInfo.imageLinks.hasOwnProperty('medium');
+					} else {
+						imgUrl = data.volumeInfo.imageLinks.hasOwnProperty('thumbnail');
+					}
+				}
+				if(!imgUrl) imgUrl= 'img/book/default.jpg'
+
+				var type = null;
+				if(data.volumeInfo.hasOwnProperty('categories')){
+					type = data.volumeInfo.categories[0];
+				}
+
+
+				var book = {
+					'bookname': data.volumeInfo.title,
+					'author': data.volumeInfo.authors,
+					'url': imgUrl,
+					'description': data.volumeInfo.description,
+					'type': type,
+					'isBook': mode
+				};
+				
+				var url = $config.API_URL + "/user/" + $scope.user.id + "/addBook";
+				$http.post(url, book)
+				.success(function(data){
+					$("#addPopup").closeModal();
+					mode ? getBooks() : getRecommendation();
+				}).error(function(data){
+					console.log(data);
+				})
+			});
 		}
+
 		$scope.removeBook = function(bookId){
 			var url = '';
 			if(mode){
@@ -329,83 +346,6 @@ angular.module('myApp.manage_book', [])
 		}
 	}
 	]);
-'use strict';
-
-angular.module('myApp.profile', [])
-
-.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/profile/:id', {
-		templateUrl: 'views/profile/profile.html',
-		controller: 'ProfileCtrl'
-	});
-}])
-
-.controller('ProfileCtrl', [
-		'$scope',
-		'$routeParams',
-		'$http',
-		'$jQueryLoader',
-		'$appConfig',
-		'$auth',
-		function($scope, $routeParams, $http, $jQueryLoader, $appConfig, $auth) {
-
-	$scope.jLoader = $jQueryLoader;
-
-	$scope.loadJquery = function(){
-		$jQueryLoader.loadTab();
-	}
-	
-	$scope.redirect = function(bookId){
-		document.location= "#/book/"+bookId;
-	}
-
-	$scope.setBorrow = function(user, book){
-		$scope.borrowUser = user;
-		$scope.borrowBook = book;
-	}
-
-	$scope.currentUser = $auth.getUser();
-
-	$scope.getUser = function(){
-		$http.get($appConfig.API_URL + "/user/" + $routeParams.id)
-		.success(function(data){
-			if(!data.error){
-				$scope.user = data.content;
-			}
-		})
-	}
-	$scope.getUser();
-
-	$scope.ratingUrl = $appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id;
-	$scope.getMessage = function(){
-		$http.get($appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id)
-		.success(function(data){
-			if(!data.error){
-				$scope.commentList = data.content
-			}
-		})
-		.error(function(error){
-			console.log(error);
-		})
-	}
-	$scope.addMessage = function(message){
-		$http.post(
-			$appConfig.API_URL + "/user_rating",
-			{
-				'fromUser': $auth.getUser().id,
-				'toUser': $scope.user.id,
-				'message': message
-			}
-		).success(function(data){
-			if(!data.error){
-				$scope.getMessage();
-			}
-		})
-	}
-	$scope.getMessage();
-
-	$scope.loadJquery();
-}]);
 'use strict';
 
 angular.module('myApp.message', [])
@@ -452,6 +392,7 @@ angular.module('myApp.message', [])
 				$http.get($config.API_URL + "/borrow?limit=1&sort=updatedAt Desc&"+query)
 				.success(function(data){
 					if(!data.error){
+						borrowId = data.content[0].id;
 						$scope.request = data.content[0];
 						$scope.startDate = data.content[0].startDate.substring(0,10);
 						$scope.returnDate = data.content[0].returnDate.substring(0,10);
@@ -461,6 +402,7 @@ angular.module('myApp.message', [])
 						} else {
 							$scope.borrowFlag = false;
 						}
+						$scope.getComment();
 					}
 				})
 				.error(function(error){
@@ -480,6 +422,8 @@ angular.module('myApp.message', [])
 					} else {
 						$scope.borrowFlag = false;
 					}
+
+					$scope.getComment();
 				}
 			})
 			.error(function(error){
@@ -488,9 +432,8 @@ angular.module('myApp.message', [])
 		}
 		$scope.getRequest();
 
-		$scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId;
 		$scope.getComment = function(){
-			$http.get($scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId)
+			$http.get($config.API_URL + "/message?borrow=" + borrowId)
 			.success(function(data){
 				if(!data.error){
 					$scope.commentList = data.content
@@ -500,7 +443,8 @@ angular.module('myApp.message', [])
 				console.log(error);
 			})
 		}
-		$scope.getComment();
+
+
 		$scope.addComment = function(message){
 			$http.post(
 				$config.API_URL + "/message",
@@ -556,6 +500,82 @@ angular.module('myApp.message', [])
 	]);
 'use strict';
 
+angular.module('myApp.profile', [])
+
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/profile/:id', {
+		templateUrl: 'views/profile/profile.html',
+		controller: 'ProfileCtrl'
+	});
+}])
+
+.controller('ProfileCtrl', [
+		'$scope',
+		'$routeParams',
+		'$http',
+		'$jQueryLoader',
+		'$appConfig',
+		'$auth',
+		function($scope, $routeParams, $http, $jQueryLoader, $appConfig, $auth) {
+
+	$scope.jLoader = $jQueryLoader;
+
+	$scope.loadJquery = function(){
+		$jQueryLoader.loadTab();
+	}
+	
+	$scope.redirect = function(bookId){
+		document.location= "#/book/"+bookId;
+	}
+
+	$scope.setBorrow = function(user, book){
+		$scope.borrowUser = user;
+		$scope.borrowBook = book;
+	}
+
+	$scope.currentUser = $auth.getUser();
+
+	$scope.getUser = function(){
+		$http.get($appConfig.API_URL + "/user/" + $routeParams.id)
+		.success(function(data){
+			if(!data.error){
+				$scope.user = data.content;
+			}
+		})
+	}
+	$scope.getUser();
+
+	$scope.getMessage = function(){
+		$http.get($appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id)
+		.success(function(data){
+			if(!data.error){
+				$scope.commentList = data.content
+			}
+		})
+		.error(function(error){
+			console.log(error);
+		})
+	}
+	$scope.addMessage = function(message){
+		$http.post(
+			$appConfig.API_URL + "/user_rating",
+			{
+				'fromUser': $auth.getUser().id,
+				'toUser': $scope.user.id,
+				'message': message
+			}
+		).success(function(data){
+			if(!data.error){
+				$scope.getMessage();
+			}
+		})
+	}
+	$scope.getMessage();
+
+	$scope.loadJquery();
+}]);
+'use strict';
+
 angular.module('myApp.profile_banner', [])
 
 .directive('profileBanner', ['$jQueryLoader', '$auth', function($jQueryLoader, $auth) {
@@ -566,7 +586,15 @@ angular.module('myApp.profile_banner', [])
 		},
 		trasclude: true,
 		replace: false,
-		templateUrl: 'views/profile_banner/profile_banner.html'
+		templateUrl: 'views/profile_banner/profile_banner.html',
+		controller: ['$scope', '$appConfig', '$http', function($scope, $appConfig, $http){
+			$http.get($appConfig.API_URL + "/user/"+$scope.user.id+"/stat")
+			.success(function(data){
+				if(!data.error){
+					$scope.stat = data.content;
+				}
+			})
+		}]
 	}
 }]);
 'use strict';

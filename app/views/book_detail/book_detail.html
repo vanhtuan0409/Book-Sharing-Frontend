@@ -23,10 +23,12 @@
 				<div ng-repeat="owner in book.owners">
 				<div class="row">
 					<div class="col l3">
-						<img ng-src="{{owner.url}}" alt="" class="circle responsive-img">
+						<a href="#/profile/{{owner.id}}">
+							<img ng-src="{{owner.url}}" alt="" class="circle responsive-img">
+						</a>
 					</div>
 					<div class="col l9 black-text">
-						<div><b>{{owner.name}}</b></div>
+						<div><a href="#/profile/{{owner.id}}" style="text-decoration:none;color:#000;"><b>{{owner.name}}</b></a></div>
 						<button ng-click="jLoader.openModal('borrowPopup');setBorrow(owner, book);"
 							class="btn waves-effect modal-trigger">
 							{{'BORROW' | translate}}

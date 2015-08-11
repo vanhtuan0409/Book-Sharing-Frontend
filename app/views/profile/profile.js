@@ -45,7 +45,6 @@ angular.module('myApp.profile', [])
 	}
 	$scope.getUser();
 
-	$scope.ratingUrl = $appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id;
 	$scope.getMessage = function(){
 		$http.get($appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id)
 		.success(function(data){

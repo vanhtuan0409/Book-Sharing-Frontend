@@ -44,6 +44,7 @@ angular.module('myApp.message', [])
 				$http.get($config.API_URL + "/borrow?limit=1&sort=updatedAt Desc&"+query)
 				.success(function(data){
 					if(!data.error){
+						borrowId = data.content[0].id;
 						$scope.request = data.content[0];
 						$scope.startDate = data.content[0].startDate.substring(0,10);
 						$scope.returnDate = data.content[0].returnDate.substring(0,10);
@@ -53,6 +54,7 @@ angular.module('myApp.message', [])
 						} else {
 							$scope.borrowFlag = false;
 						}
+						$scope.getComment();
 					}
 				})
 				.error(function(error){
@@ -72,6 +74,8 @@ angular.module('myApp.message', [])
 					} else {
 						$scope.borrowFlag = false;
 					}
+
+					$scope.getComment();
 				}
 			})
 			.error(function(error){
@@ -80,9 +84,8 @@ angular.module('myApp.message', [])
 		}
 		$scope.getRequest();
 
-		$scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId;
 		$scope.getComment = function(){
-			$http.get($scope.messageUrl = $config.API_URL + "/message?borrow=" + borrowId)
+			$http.get($config.API_URL + "/message?borrow=" + borrowId)
 			.success(function(data){
 				if(!data.error){
 					$scope.commentList = data.content
@@ -92,7 +95,8 @@ angular.module('myApp.message', [])
 				console.log(error);
 			})
 		}
-		$scope.getComment();
+
+
 		$scope.addComment = function(message){
 			$http.post(
 				$config.API_URL + "/message",

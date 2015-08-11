@@ -48,7 +48,7 @@ angular.module('myApp.manage_book', [])
 		}
 
 		$scope.log = function(){
-			var bookApi = "https://www.googleapis.com/books/v1/volumes?q="+$scope.searchString+"&projection=lite&maxResults=10&key=AIzaSyBTV6vCk7Ns6PQ0BT_BhaqorBlf253YwHs";
+			var bookApi = "https://www.googleapis.com/books/v1/volumes?q="+$scope.searchString+"&projection=lite&zoom=0&maxResults=10&key=AIzaSyBTV6vCk7Ns6PQ0BT_BhaqorBlf253YwHs";
 			$http.get(bookApi)
 			.success(function(data){
 				$scope.results = data.items;
@@ -58,27 +58,45 @@ angular.module('myApp.manage_book', [])
 			})
 		}
 
-		$scope.addBook = function(bookObj){
-			var book = {
-				'bookname': bookObj.volumeInfo.title,
-				'author': bookObj.volumeInfo.authors,
-				'url': bookObj.volumeInfo.imageLinks.thumbnail,
-				'description': bookObj.volumeInfo.description,
-				'type': bookObj.volumeInfo.mainCategory,
-				'isBook': mode
-			};
-
-			console.log(mode);
-
-			var url = $config.API_URL + "/user/" + $scope.user.id + "/addBook";
-			$http.post(url, book)
+		$scope.addBook = function(bookId){
+			$http.get("https://www.googleapis.com/books/v1/volumes/"+bookId)
 			.success(function(data){
-				$("#addPopup").closeModal();
-				mode ? getBooks() : getRecommendation();
-			}).error(function(data){
-				console.log(data);
-			})
+				var imgUrl = null;
+				if(data.volumeInfo.hasOwnProperty('imageLinks')){
+					if(data.volumeInfo.imageLinks.hasOwnProperty('medium')){
+						imgUrl = data.volumeInfo.imageLinks.hasOwnProperty('medium');
+					} else {
+						imgUrl = data.volumeInfo.imageLinks.hasOwnProperty('thumbnail');
+					}
+				}
+				if(!imgUrl) imgUrl= 'img/book/default.jpg'
+
+				var type = null;
+				if(data.volumeInfo.hasOwnProperty('categories')){
+					type = data.volumeInfo.categories[0];
+				}
+
+
+				var book = {
+					'bookname': data.volumeInfo.title,
+					'author': data.volumeInfo.authors,
+					'url': imgUrl,
+					'description': data.volumeInfo.description,
+					'type': type,
+					'isBook': mode
+				};
+				
+				var url = $config.API_URL + "/user/" + $scope.user.id + "/addBook";
+				$http.post(url, book)
+				.success(function(data){
+					$("#addPopup").closeModal();
+					mode ? getBooks() : getRecommendation();
+				}).error(function(data){
+					console.log(data);
+				})
+			});
 		}
+
 		$scope.removeBook = function(bookId){
 			var url = '';
 			if(mode){

@@ -28,7 +28,7 @@
 						</li>
 					</ul>
 					<button class="btn waves-effect right red lighten-2" style="margin-top: 1em;" ng-click="deleteRequest(request.id);" ng-if="request.status != 'closed'">{{'CLOSE' | translate}}</button>
-					<button class="btn waves-effect right" style="margin:1em 1em 0 0;" ng-click="acceptRequest(request.id)" ng-if="request.status == 'init'">{{'ACCEPT' | translate}}</button>
+					<button class="btn waves-effect right" style="margin:1em 1em 0 0;" ng-click="acceptRequest(request.id)" ng-if="request.status == 'init' && user.id != request.fromUser.id">{{'ACCEPT' | translate}}</button>
 				</div>
 				<div class="divider"></div>
 				<div class="row request-info" style="">
@@ -40,11 +40,11 @@
 						<div class="row" style="margin-bottom: 0px;">
 							<div class="col l6">
 								<label for="meetUpDate" class="black-text">{{'MEET_UP_DATE' | translate}}</label>
-								<input type="text" class="datepicker" ng-model="startDate">
+								<input id="meetUpDate" type="text" class="datepicker" ng-model="startDate">
 							</div>
 							<div class="col l6">
 								<label for="returnDate" class="black-text">{{'RETURN_DATE' | translate}}</label>
-								<input type="text" class="datepicker" ng-model="returnDate">
+								<input id="returnDate" type="text" class="datepicker" ng-model="returnDate">
 							</div>
 						</div>
 					</div>
