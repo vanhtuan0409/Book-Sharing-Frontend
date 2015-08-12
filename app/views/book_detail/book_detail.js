@@ -25,6 +25,9 @@ angular.module('myApp.book_detail', ['ngRoute'])
 		$scope.loadJquery();
 
 		$scope.filterOwner = function(owner){
+			if(!$auth.getUser()){
+				return owner;
+			}
 			if(owner.id != $auth.getUser().id){
 				return owner;
 			}

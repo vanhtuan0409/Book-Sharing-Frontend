@@ -32,7 +32,7 @@
 								<th>{{'BOOK_NAME' | translate}}</th>
 								<th>{{'BOOK_AUTHOR' | translate}}</th>
 								<th>{{'BOOK_TYPE' | translate}}</th>
-								<th ng-if="currentUser.id != user.id"></th>
+								<th ng-if="currentUser && currentUser.id != user.id"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -43,7 +43,7 @@
 								<td  ng-click="redirect(book.id);">{{book.bookname}}</td>
 								<td  ng-click="redirect(book.id);">{{book.author.join(', ')}}</td>
 								<td  ng-click="redirect(book.id);">{{book.type}}</td>
-								<td ng-if="currentUser.id != user.id">
+								<td ng-if="currentUser && currentUser.id != user.id">
 									<button 
 										class="btn waves-effect modal-trigger"
 										ng-click="jLoader.openModal('borrowPopup');setBorrow(user,book);">

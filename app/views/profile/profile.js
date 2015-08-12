@@ -16,6 +16,7 @@ angular.module('myApp.profile', [])
 		'$jQueryLoader',
 		'$appConfig',
 		'$auth',
+		'$rootScope',
 		function($scope, $routeParams, $http, $jQueryLoader, $appConfig, $auth) {
 
 	$scope.jLoader = $jQueryLoader;
@@ -34,6 +35,7 @@ angular.module('myApp.profile', [])
 	}
 
 	$scope.currentUser = $auth.getUser();
+	$scope.user = {};
 
 	$scope.getUser = function(){
 		$http.get($appConfig.API_URL + "/user/" + $routeParams.id)
@@ -70,6 +72,7 @@ angular.module('myApp.profile', [])
 			}
 		})
 	}
+
 	$scope.getMessage();
 
 	$scope.loadJquery();

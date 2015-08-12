@@ -25,6 +25,9 @@ angular.module('myApp.book_detail', ['ngRoute'])
 		$scope.loadJquery();
 
 		$scope.filterOwner = function(owner){
+			if(!$auth.getUser()){
+				return owner;
+			}
 			if(owner.id != $auth.getUser().id){
 				return owner;
 			}
@@ -137,6 +140,10 @@ angular.module('myApp.comment', [])
 			$scope.commentMsg = '';
 			$scope.sendMsg = function(){
 				if($scope.commentMsg != ''){
+					if(!$auth.getUser()){
+						alert("Please Login!");
+						return;
+					}
 					$scope.addMessage({msg: $scope.commentMsg});
 					$scope.commentMsg = '';
 				}
@@ -539,6 +546,7 @@ angular.module('myApp.profile', [])
 		'$jQueryLoader',
 		'$appConfig',
 		'$auth',
+		'$rootScope',
 		function($scope, $routeParams, $http, $jQueryLoader, $appConfig, $auth) {
 
 	$scope.jLoader = $jQueryLoader;
@@ -557,6 +565,7 @@ angular.module('myApp.profile', [])
 	}
 
 	$scope.currentUser = $auth.getUser();
+	$scope.user = {};
 
 	$scope.getUser = function(){
 		$http.get($appConfig.API_URL + "/user/" + $routeParams.id)
@@ -593,6 +602,7 @@ angular.module('myApp.profile', [])
 			}
 		})
 	}
+
 	$scope.getMessage();
 
 	$scope.loadJquery();
@@ -605,18 +615,19 @@ angular.module('myApp.profile_banner', [])
 	return {
 		restrict: 'E',
 		scope:{
-			user: "="
+			user: "=",
 		},
-		trasclude: true,
-		replace: false,
+		replace: true,
 		templateUrl: 'views/profile_banner/profile_banner.html',
 		controller: ['$scope', '$appConfig', '$http', function($scope, $appConfig, $http){
-			$http.get($appConfig.API_URL + "/user/"+$scope.user.id+"/stat")
-			.success(function(data){
-				if(!data.error){
-					$scope.stat = data.content;
-				}
-			})
+			$scope.$watch("user", function(newValue, oldValue){
+				$http.get($appConfig.API_URL + "/user/"+$scope.user.id+"/stat")
+				.success(function(data){
+					if(!data.error){
+						$scope.stat = data.content;
+					}
+				})
+			});
 		}]
 	}
 }]);

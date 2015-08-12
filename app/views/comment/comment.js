@@ -18,6 +18,10 @@ angular.module('myApp.comment', [])
 			$scope.commentMsg = '';
 			$scope.sendMsg = function(){
 				if($scope.commentMsg != ''){
+					if(!$auth.getUser()){
+						alert("Please Login!");
+						return;
+					}
 					$scope.addMessage({msg: $scope.commentMsg});
 					$scope.commentMsg = '';
 				}

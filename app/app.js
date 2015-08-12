@@ -145,7 +145,7 @@ angular.module('myApp', [
 		'CHOOSE_RETURN': '返却日を選ぶ',
 		'PEOPLE': '人',
 		'ALL_BOOK': '全ての本',
-		'NO_MESSAGE': 'あなたはまだメッセージがありません!',
+		'NO_MESSAGE': 'メッセージがまだありません!',
 	});
 
 	$translateProvider.preferredLanguage('ja');	
