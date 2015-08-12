@@ -1,16 +1,15 @@
 <div class="home-tab">
 	<div class="tab-wrapper">
 		<ul class="tabs">
-			<!-- <li class="tab"><a class="black-text" href="#popular">{{'POPULAR' | translate}}</a></li> -->
-			<li class="tab"><a class="active black-text" href="#around">{{'ALL_BOOK' | translate}}</a></li>
-			<!-- <li class="tab"><a class="black-text" href="#new">{{'NEW_RELEASE' | translate}}</a></li> -->
+			<li class="tab"><a class="active black-text" href="#book">{{'ALL_BOOK' | translate}}</a></li>
+			<li class="tab"><a class="black-text" href="#people">{{'PEOPLE' | translate}}</a></li>
 		</ul>
 	</div>
 </div>
 <div class="container">
-	<!-- <div id="popular">
+	<div id="book">
 		<div class="row">
-			<div class="col l3" ng-repeat="book in books">
+			<div class="col l3" ng-repeat="book in books | filter:hasOwner">
 				<div class="card book-card">
 					<div class="card-image">
 						<a href="#/book/{{book.id}}">
@@ -26,63 +25,40 @@
 							</span>
 							<span ng-if="book.owners.length > 2" class="more-owner">{{book.owners.length-2}}+</span>
 						</div>
-						<div><b>{{book.bookname | limitTo: 20}}{{book.bookname.length > 20 ? '...' : ''}}</b></div>
-						<div>{{book.author.join(', ') | limitTo: 20}}{{book.author.join(', ').length > 20 ? '...' : ''}}</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div> -->
-	
-	<div id="around">
-		<div class="row">
-			<div class="col l3" ng-repeat="book in books">
-				<div class="card book-card">
-					<div class="card-image">
-						<a href="#/book/{{book.id}}">
-							<img ng-src="{{book.url}}" class="responsive-img">
-						</a>
-					</div>
-					<div class="card-content">
-						<div class="friend-owner">
-							<span ng-repeat="owner in book.owners | limitTo: 2">
-								<a href="#/profile/{{owner.id}}">
-									<img ng-src="{{owner.url}}" class="circle friend-owner">
-								</a>
-							</span>
-							<span ng-if="book.owners.length > 2" class="more-owner">{{book.owners.length-2}}+</span>
+						<div class="wrap-text">
+							<a href="#/book/{{book.id}}" style="color:#000;">
+								<b>{{book.bookname}}</b>
+							</a>
 						</div>
-						<div><b>{{book.bookname | limitTo: 15}}{{book.bookname.length > 15 ? '...' : ''}}</b></div>
-						<div>Author: {{book.author.join(', ') | limitTo: 15}}{{book.author.join(', ').length > 15 ? '...' : ''}}</div>
+						<div class="wrap-text">
+							<a href="#/book/{{book.id}}" style="color:#000;">
+								Author: {{book.author.join(', ')}}
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- <div id="new">
+	<div id="people">
 		<div class="row">
-			<div class="col l3" ng-repeat="book in books">
-				<div class="card book-card">
+			<div class="col l3" ng-repeat="user in users">
+				<div class="card">
 					<div class="card-image">
-						<a href="#/book/{{book.id}}">
-							<img ng-src="{{book.url}}" class="responsive-img">
+						<a href="#/profile/{{user.id}}">
+							<img ng-src="{{user.url}}" class="responsive-img">
 						</a>
 					</div>
 					<div class="card-content">
-						<div class="friend-owner">
-							<span ng-repeat="owner in book.owners | limitTo: 2">
-								<a href="#/profile/{{owner.id}}">
-									<img ng-src="{{owner.url}}" class="circle friend-owner">
-								</a>
-							</span>
-							<span ng-if="book.owners.length > 2" class="more-owner">{{book.owners.length-2}}+</span>
+						<div class="wrap-text">
+							<a href="#/profile/{{user.id}}" style="color:#000;">
+								<b>{{user.name}}</b>
+							</a>
 						</div>
-						<div><b>{{book.bookname | limitTo: 20}}{{book.bookname.length > 20 ? '...' : ''}}</b></div>
-						<div>{{book.author.join(', ') | limitTo: 20}}{{book.author.join(', ').length > 20 ? '...' : ''}}</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div> -->
+	</div>
 </div>

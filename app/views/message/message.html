@@ -1,7 +1,20 @@
 <div class="container">
 	<profile-banner user="user"></profile-banner>
 
-	<div class="row">
+	<div class="row" ng-if="no_message">
+		<div class="col l12">
+			<div class="card-panel">
+				<div class="card-content valign-wrapper" style="height:250px;">
+					<div class="valign center" style="width:100%;">
+						<i class="medium material-icons grey-text">error</i>
+						<h5>{{'NO_MESSAGE' | translate}}</h5>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row" ng-if="!no_message">
 		<div class="col l3">
 			<ul class="collection">
 				<li class="collection-item avatar" ng-repeat="msg in msgList" ng-click="redirect(msg.id);">

@@ -20,7 +20,7 @@
 				<div class="card-title black-text">{{'INFORMATION' | translate}}</div>
 				<div class="divider"></div>
 				
-				<div ng-repeat="owner in book.owners">
+				<div ng-repeat="owner in book.owners | filter:filterOwner">
 				<div class="row">
 					<div class="col l3">
 						<a href="#/profile/{{owner.id}}">

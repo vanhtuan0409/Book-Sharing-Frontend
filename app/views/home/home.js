@@ -8,7 +8,6 @@ angular.module('myApp.home', [])
 		controller: 'HomeCtrl'
 	});
 }])
-
 .controller('HomeCtrl', ['$scope', '$http', '$jQueryLoader', '$appConfig',
 	function($scope, $http, $jQueryLoader, $appConfig) {
 		$scope.jLoader = $jQueryLoader;
@@ -18,10 +17,6 @@ angular.module('myApp.home', [])
 		}
 		$scope.loadJquery();
 
-		$scope.random = function(){
-			return Math.random();
-		}
-
 		$scope.getAllBook = function(){
 			$http.get($appConfig.API_URL+'/book?sort=updatedAt DESC')
 			.success(function(data){
@@ -30,5 +25,22 @@ angular.module('myApp.home', [])
 				}
 			})
 		}
+
+		$scope.getAllUser = function(){
+			$http.get($appConfig.API_URL+'/user?sort=updatedAt DESC')
+			.success(function(data){
+				if (!data.error){
+					$scope.users = data.content;
+				}
+			})
+		}
+
+		$scope.hasOwner = function(book){
+			if(book.owners.length > 0){
+				return book;
+			}
+		}
+
 		$scope.getAllBook();
+		$scope.getAllUser();
 }]);

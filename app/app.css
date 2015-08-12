@@ -314,3 +314,10 @@ textarea:-ms-input-placeholder{
 #book-title{
   padding-left: 0px;
 }
+
+.wrap-text{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+}

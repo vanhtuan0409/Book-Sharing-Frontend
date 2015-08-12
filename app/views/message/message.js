@@ -44,6 +44,11 @@ angular.module('myApp.message', [])
 				$http.get($config.API_URL + "/borrow?limit=1&sort=updatedAt Desc&"+query)
 				.success(function(data){
 					if(!data.error){
+						if(data.content.length == 0){
+							$scope.no_message = true;
+							return;
+						}
+						
 						borrowId = data.content[0].id;
 						$scope.request = data.content[0];
 						$scope.startDate = data.content[0].startDate.substring(0,10);

@@ -65,8 +65,8 @@ angular.module('myApp', [
 		'MESSAGE': 'Message',
 		'MEET_UP_DATE': 'Meet up date',
 		'RETURN_DATE': 'Return date',
-		'BORROW_MESSAGE': 'You want to borrow from <b>{{toUser}}</b>({{email}}) the book <b>{{book}}</b>',
-		'LEND_MESSAGE': '<b>{{fromUser}}</b>({{email}}) want to borrow your book <b>{{book}}</b>',
+		'BORROW_MESSAGE': 'You want to borrow from <b>{{toUser}}</b> the book <b>{{book}}</b>',
+		'LEND_MESSAGE': '<b>{{fromUser}}</b> want to borrow your book <b>{{book}}</b>',
 		'SEND': 'Send',
 		'ACCEPT': 'Accept',
 		'ACCEPTED': 'Accepted',
@@ -85,6 +85,7 @@ angular.module('myApp', [
 		'CHOOSE_RETURN': 'Choose your return date',
 		'PEOPLE': 'People',
 		'ALL_BOOK': 'All Book',
+		'NO_MESSAGE': 'YOU HAVE NO MESSAGE YET!',
 	});
 
 	$translateProvider.translations('ja', {
@@ -124,8 +125,8 @@ angular.module('myApp', [
 		'MESSAGE': 'メッセージ',
 		'MEET_UP_DATE': '待ち合わせ日',
 		'RETURN_DATE': '返却日',
-		'BORROW_MESSAGE': '<a href="{{userUrl}}" style="color:black;"><b>{{toUser}}</b>({{email}})</a>から<a href="{{bookUrl}}" style="color:black;"><b>{{book}}</b></a>を借りたいです',
-		'LEND_MESSAGE': '<a href="{{userUrl}}" style="color:black;"><b>{{fromUser}}</b>({{email}})</a>はあなたの<a href="{{bookUrl}}" style="color:black;"><b>{{book}}</b></a>を借りたいです',
+		'BORROW_MESSAGE': '<a href="{{userUrl}}" style="color:black;"><b>{{toUser}}</b></a>から<a href="{{bookUrl}}" style="color:black;"><b>{{book}}</b></a>を借りたいです',
+		'LEND_MESSAGE': '<a href="{{userUrl}}" style="color:black;"><b>{{fromUser}}</b></a>はあなたの<a href="{{bookUrl}}" style="color:black;"><b>{{book}}</b></a>を借りたいです',
 		'SEND': '送る',
 		'ACCEPT': '同意',
 		'ACCEPTED': '同意された',
@@ -144,6 +145,7 @@ angular.module('myApp', [
 		'CHOOSE_RETURN': '返却日を選ぶ',
 		'PEOPLE': '人',
 		'ALL_BOOK': '全ての本',
+		'NO_MESSAGE': 'あなたはまだメッセージがありません!',
 	});
 
 	$translateProvider.preferredLanguage('ja');	

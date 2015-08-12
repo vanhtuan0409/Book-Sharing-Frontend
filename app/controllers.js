@@ -24,6 +24,12 @@ angular.module('myApp.book_detail', ['ngRoute'])
 		}
 		$scope.loadJquery();
 
+		$scope.filterOwner = function(owner){
+			if(owner.id != $auth.getUser().id){
+				return owner;
+			}
+		}
+
 		$scope.setBorrow = function(user, book){
 			$scope.borrowUser = user;
 			$scope.borrowBook = book;
@@ -68,33 +74,6 @@ angular.module('myApp.book_detail', ['ngRoute'])
 	}]);
 'use strict';
 
-angular.module('myApp.comment', [])
-
-.directive('ngComment', ['$jQueryLoader', function($jQueryLoader) {
-	return {
-		restrict: 'E',
-		scope: {
-            comments: '=',
-            addMessage: '&'
-        },
-		trasclude: true,
-		replace: true,
-		templateUrl: 'views/comment/comment.html',
-		link: function($scope,element,attrs){
-		},
-		controller: ['$scope', '$http', '$auth', '$appConfig', function($scope, $http, $auth, $appConfig){
-			$scope.commentMsg = '';
-			$scope.sendMsg = function(){
-				if($scope.commentMsg != ''){
-					$scope.addMessage({msg: $scope.commentMsg});
-					$scope.commentMsg = '';
-				}
-			}
-		}]
-	}
-}]);
-'use strict';
-
 angular.module('myApp.borrow_form', [])
 
 .directive('borrowForm', ['$jQueryLoader', function($jQueryLoader) {
@@ -134,6 +113,33 @@ angular.module('myApp.borrow_form', [])
 				}).error(function(data){
 					console.log(data);
 				})
+			}
+		}]
+	}
+}]);
+'use strict';
+
+angular.module('myApp.comment', [])
+
+.directive('ngComment', ['$jQueryLoader', function($jQueryLoader) {
+	return {
+		restrict: 'E',
+		scope: {
+            comments: '=',
+            addMessage: '&'
+        },
+		trasclude: true,
+		replace: true,
+		templateUrl: 'views/comment/comment.html',
+		link: function($scope,element,attrs){
+		},
+		controller: ['$scope', '$http', '$auth', '$appConfig', function($scope, $http, $auth, $appConfig){
+			$scope.commentMsg = '';
+			$scope.sendMsg = function(){
+				if($scope.commentMsg != ''){
+					$scope.addMessage({msg: $scope.commentMsg});
+					$scope.commentMsg = '';
+				}
 			}
 		}]
 	}
@@ -204,7 +210,6 @@ angular.module('myApp.home', [])
 		controller: 'HomeCtrl'
 	});
 }])
-
 .controller('HomeCtrl', ['$scope', '$http', '$jQueryLoader', '$appConfig',
 	function($scope, $http, $jQueryLoader, $appConfig) {
 		$scope.jLoader = $jQueryLoader;
@@ -214,10 +219,6 @@ angular.module('myApp.home', [])
 		}
 		$scope.loadJquery();
 
-		$scope.random = function(){
-			return Math.random();
-		}
-
 		$scope.getAllBook = function(){
 			$http.get($appConfig.API_URL+'/book?sort=updatedAt DESC')
 			.success(function(data){
@@ -226,7 +227,24 @@ angular.module('myApp.home', [])
 				}
 			})
 		}
+
+		$scope.getAllUser = function(){
+			$http.get($appConfig.API_URL+'/user?sort=updatedAt DESC')
+			.success(function(data){
+				if (!data.error){
+					$scope.users = data.content;
+				}
+			})
+		}
+
+		$scope.hasOwner = function(book){
+			if(book.owners.length > 0){
+				return book;
+			}
+		}
+
 		$scope.getAllBook();
+		$scope.getAllUser();
 }]);
 'use strict';
 
@@ -392,6 +410,11 @@ angular.module('myApp.message', [])
 				$http.get($config.API_URL + "/borrow?limit=1&sort=updatedAt Desc&"+query)
 				.success(function(data){
 					if(!data.error){
+						if(data.content.length == 0){
+							$scope.no_message = true;
+							return;
+						}
+						
 						borrowId = data.content[0].id;
 						$scope.request = data.content[0];
 						$scope.startDate = data.content[0].startDate.substring(0,10);
