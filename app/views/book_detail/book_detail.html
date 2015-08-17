@@ -30,7 +30,7 @@
 					<div class="col l9 black-text">
 						<div><a href="#/profile/{{owner.id}}" style="text-decoration:none;color:#000;"><b>{{owner.name}}</b></a></div>
 						<button ng-click="jLoader.openModal('borrowPopup');setBorrow(owner, book);"
-							class="btn waves-effect modal-trigger" ng-if="$auth.getUser()">
+							class="btn waves-effect modal-trigger" ng-if="isLoggedIn">
 							{{'BORROW' | translate}}
 						</button>
 					</div>

@@ -24,6 +24,8 @@ angular.module('myApp.book_detail', ['ngRoute'])
 		}
 		$scope.loadJquery();
 
+		$scope.isLoggedIn = $auth.getUser() != null ? true : false;
+
 		$scope.filterOwner = function(owner){
 			if(!$auth.getUser()){
 				return owner;
