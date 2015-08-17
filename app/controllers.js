@@ -180,11 +180,25 @@ angular.module('myApp.header', ['facebook'])
 			})
 		},
 		controller: ['$scope', '$http', '$auth', '$appConfig', '$cookieStore', 'Facebook', function($scope, $http, $auth, $appConfig, $cookies, Facebook){
-			$scope.user = $auth.getUser();
+			// $scope.user = {name: 'asdasdas'};
+
+			if($auth.getUser()){
+				$scope.user = $auth.getUser();
+			} else {
+				$http.get($appConfig.API_URL + "/auth")
+				.success(function(data){
+					if(!data.error){
+						$auth.setUser(data.content);
+						$scope.user = data.content;
+					}
+				})
+				.error(function(err){
+					console.log(err);
+				})
+			}
 
 			$scope.logout = function(){
 				$auth.logout();
-				window.location.reload();
 			}
 
 			$scope.login = function() {
@@ -260,7 +274,10 @@ angular.module('myApp.manage_book', [])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/manage-book', {
 		templateUrl: 'views/manage_book/manage_book.html',
-		controller: 'ManageBookCtrl'
+		controller: 'ManageBookCtrl',
+		access: {
+			requiresLogin: true
+		}
 	});
 }])
 
@@ -337,7 +354,7 @@ angular.module('myApp.manage_book', [])
 					'bookname': data.volumeInfo.title,
 					'author': data.volumeInfo.authors,
 					'url': imgUrl,
-					'description': data.volumeInfo.description,
+					'description': $(data.volumeInfo.description).text(),
 					'type': type,
 					'isBook': mode
 				};
@@ -378,7 +395,10 @@ angular.module('myApp.message', [])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/message', {
 		templateUrl: 'views/message/message.html',
-		controller: 'MessageCtrl'
+		controller: 'MessageCtrl',
+		access: {
+			requiresLogin: true
+		}
 	});
 }])
 
@@ -638,7 +658,10 @@ angular.module('myApp.borrow_request', [])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/borrow', {
 		templateUrl: 'views/request/borrow_request.html',
-		controller: 'BorrowRequestCtrl'
+		controller: 'BorrowRequestCtrl',
+		access: {
+			requiresLogin: true
+		}
 	});
 }])
 
@@ -700,7 +723,10 @@ angular.module('myApp.lend_request', [])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/lend', {
 		templateUrl: 'views/request/lend_request.html',
-		controller: 'LendRequestCtrl'
+		controller: 'LendRequestCtrl',
+		access: {
+			requiresLogin: true
+		}
 	});
 }])
 

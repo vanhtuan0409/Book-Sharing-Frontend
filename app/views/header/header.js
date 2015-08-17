@@ -16,11 +16,25 @@ angular.module('myApp.header', ['facebook'])
 			})
 		},
 		controller: ['$scope', '$http', '$auth', '$appConfig', '$cookieStore', 'Facebook', function($scope, $http, $auth, $appConfig, $cookies, Facebook){
-			$scope.user = $auth.getUser();
+			// $scope.user = {name: 'asdasdas'};
+
+			if($auth.getUser()){
+				$scope.user = $auth.getUser();
+			} else {
+				$http.get($appConfig.API_URL + "/auth")
+				.success(function(data){
+					if(!data.error){
+						$auth.setUser(data.content);
+						$scope.user = data.content;
+					}
+				})
+				.error(function(err){
+					console.log(err);
+				})
+			}
 
 			$scope.logout = function(){
 				$auth.logout();
-				window.location.reload();
 			}
 
 			$scope.login = function() {

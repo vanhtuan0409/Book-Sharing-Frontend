@@ -5,7 +5,10 @@ angular.module('myApp.message', [])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/message', {
 		templateUrl: 'views/message/message.html',
-		controller: 'MessageCtrl'
+		controller: 'MessageCtrl',
+		access: {
+			requiresLogin: true
+		}
 	});
 }])
 

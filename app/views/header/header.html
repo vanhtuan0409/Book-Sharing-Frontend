@@ -25,12 +25,12 @@
                     <i class="material-icons">notifications</i>
                 </a>
             </li>
-            <li ng-if="user != null" >
-                <a id="user-header-dropdown-menu" class="dropdown-button" href="#/" data-activates="user-header-dropdown" ng-click="open(this);">
+            <li ng-show="user != null" >
+                <a id="user-header-dropdown-menu" class="dropdown-button" href="" data-activates="user-header-dropdown">
                     {{user.name}}<i class="material-icons right">arrow_drop_down</i>
                 </a>
             </li>
-            <li ng-if="user == null">
+            <li ng-show="user == null">
                 <a href="" ng-click="login();">{{'LOGIN' | translate}}</a>
             </li>
         </ul>

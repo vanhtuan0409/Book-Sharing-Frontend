@@ -5,7 +5,10 @@ angular.module('myApp.manage_book', [])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/manage-book', {
 		templateUrl: 'views/manage_book/manage_book.html',
-		controller: 'ManageBookCtrl'
+		controller: 'ManageBookCtrl',
+		access: {
+			requiresLogin: true
+		}
 	});
 }])
 
@@ -82,7 +85,7 @@ angular.module('myApp.manage_book', [])
 					'bookname': data.volumeInfo.title,
 					'author': data.volumeInfo.authors,
 					'url': imgUrl,
-					'description': data.volumeInfo.description,
+					'description': $(data.volumeInfo.description).text(),
 					'type': type,
 					'isBook': mode
 				};

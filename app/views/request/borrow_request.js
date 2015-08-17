@@ -5,7 +5,10 @@ angular.module('myApp.borrow_request', [])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/borrow', {
 		templateUrl: 'views/request/borrow_request.html',
-		controller: 'BorrowRequestCtrl'
+		controller: 'BorrowRequestCtrl',
+		access: {
+			requiresLogin: true
+		}
 	});
 }])
 

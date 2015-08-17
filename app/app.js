@@ -23,7 +23,7 @@ angular.module('myApp', [
 	'myApp.services'
 ])
 
-.config(['$routeProvider', 'FacebookProvider', '$translateProvider', function($routeProvider, FacebookProvider, $translateProvider) {
+.config(['$routeProvider', 'FacebookProvider', '$translateProvider' , function($routeProvider, FacebookProvider, $translateProvider) {
 	$routeProvider.otherwise({redirectTo: '/'});
 
 	FacebookProvider.init('868507116576768');
@@ -148,5 +148,15 @@ angular.module('myApp', [
 		'NO_MESSAGE': 'メッセージがまだありません!',
 	});
 
-	$translateProvider.preferredLanguage('ja');	
+	$translateProvider.preferredLanguage('ja');
+}])
+
+.run(['$rootScope', '$auth', function($rootScope, $auth){
+	$rootScope.$on('$routeChangeStart', function(event, next){
+		if(next.access !== undefined){
+			if(next.access.requiresLogin && !$auth.getUser()){
+				window.location = "#/";
+			}
+		}
+	})
 }]);

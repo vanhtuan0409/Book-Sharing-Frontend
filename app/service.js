@@ -27,6 +27,7 @@ angular.module('myApp.services', ['ngCookies'])
 				hover: hover,
 				belowOrigin: false
 			});
+			// console.log($('.dropdown-button'));
 		}
 	}
 })
@@ -51,8 +52,8 @@ angular.module('myApp.services', ['ngCookies'])
 			currentUser = user;
 		},
 		logout: function(){
-			$cookieStore.remove('user');
-			currentUser = null;
+			$http.get($appConfig.API_URL + "/auth/logout")
+			window.location.reload();
 		},
 		login: function(token, id, cb){
 			$http.post(
@@ -63,16 +64,13 @@ angular.module('myApp.services', ['ngCookies'])
 				}
 			).success(function(data){
 				if(!data.error){
-					$cookieStore.put('user', data.content);
 					currentUser = data.content;
 					cb();
 				} else {
-					$cookieStore.put('user', null);
 					currentUser = null;
 					cb();
 				}
 			}).error(function(err){
-				$cookieStore.put('user', null);
 				currentUser = null;
 				cb();
 			})

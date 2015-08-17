@@ -5,7 +5,10 @@ angular.module('myApp.lend_request', [])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/lend', {
 		templateUrl: 'views/request/lend_request.html',
-		controller: 'LendRequestCtrl'
+		controller: 'LendRequestCtrl',
+		access: {
+			requiresLogin: true
+		}
 	});
 }])
 
