@@ -11,26 +11,26 @@
 	<div class="divider" style="margin-top: 15px;"></div>
 	<div class="row">
 		<div class="col l3">
-			<a href="#/profile">
-				<p style="font-size: 20px;">{{stat.book}}</p>
+			<a href="#/profile/{{user.id}}">
+				<p style="font-size: 20px;">{{user.stats.book}}</p>
 				<p><b>{{'BOOK_OWNED' | translate}}</b></p>
 			</a>
 		</div>
 		<div class="col l3">
 			<a href="#/borrow">
-				<p style="font-size: 20px;">{{stat.borrow}}</p>
+				<p style="font-size: 20px;">{{user.stats.borrow}}</p>
 				<p><b>{{'BOOK_BORROW' | translate}}</b></p>
 			</a>
 		</div>
 		<div class="col l3">
 			<a href="#/lend">
-				<p style="font-size: 20px;">{{stat.lend}}</p>
+				<p style="font-size: 20px;">{{user.stats.lend}}</p>
 				<p><b>{{'BOOK_LEND' | translate}}</b></p>
 			</a>
 		</div>
 		<div class="col l3">
 			<a href="">
-				<p style="font-size: 20px;">100</p>
+				<p style="font-size: 20px;">{{user.point}}</p>
 				<p><b>{{'REPUTATION' | translate}}</b></p>
 			</a>
 		</div>

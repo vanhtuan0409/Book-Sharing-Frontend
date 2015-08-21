@@ -23,8 +23,10 @@ angular.module('myApp', [
 	'myApp.services'
 ])
 
-.config(['$routeProvider', 'FacebookProvider', '$translateProvider' , function($routeProvider, FacebookProvider, $translateProvider) {
-	$routeProvider.otherwise({redirectTo: '/'});
+.config(['$routeProvider', 'FacebookProvider', '$translateProvider', function($routeProvider, FacebookProvider, $translateProvider) {
+	$routeProvider.otherwise({
+		redirectTo: '/'
+	});
 
 	FacebookProvider.init('868507116576768');
 
@@ -74,7 +76,7 @@ angular.module('myApp', [
 		'DELETE': 'Delete',
 		'REMOVE': 'Remove',
 		'CANCEL': 'Cancel',
-		'ADD' : 'Add',
+		'ADD': 'Add',
 		'REQUEST_TO_BORROW': 'Request to borrow',
 		'REQUEST_FROM': 'Request form',
 		'SEND_YOUR_REQUEST': 'Send your request',
@@ -86,6 +88,7 @@ angular.module('myApp', [
 		'PEOPLE': 'People',
 		'ALL_BOOK': 'All Book',
 		'NO_MESSAGE': 'YOU HAVE NO MESSAGE YET!',
+		'BOOK_REVIEWS': 'Book Reviews',
 	});
 
 	$translateProvider.translations('ja', {
@@ -134,7 +137,7 @@ angular.module('myApp', [
 		'DELETE': '消す',
 		'REMOVE': '消す',
 		'CANCEL': 'キャンセル',
-		'ADD' : '加える',
+		'ADD': '加える',
 		'REQUEST_TO_BORROW': '借りる為に連絡をします',
 		'REQUEST_FROM': 'からのリクエスト',
 		'SEND_YOUR_REQUEST': 'リクエストを送信します',
@@ -146,15 +149,16 @@ angular.module('myApp', [
 		'PEOPLE': '人',
 		'ALL_BOOK': '全ての本',
 		'NO_MESSAGE': 'メッセージがまだありません!',
+		'BOOK_REVIEWS': '本のレビュー',
 	});
 
 	$translateProvider.preferredLanguage('ja');
 }])
 
-.run(['$rootScope', '$auth', function($rootScope, $auth){
-	$rootScope.$on('$routeChangeStart', function(event, next){
-		if(next.access !== undefined){
-			if(next.access.requiresLogin && !$auth.getUser()){
+.run(['$rootScope', '$auth', function($rootScope, $auth) {
+	$rootScope.$on('$routeChangeStart', function(event, next) {
+		if (next.access !== undefined) {
+			if (next.access.requiresLogin && !$auth.getUser()) {
 				window.location = "#/";
 			}
 		}

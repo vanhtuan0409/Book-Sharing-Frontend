@@ -10,15 +10,5 @@ angular.module('myApp.profile_banner', [])
 		},
 		replace: true,
 		templateUrl: 'views/profile_banner/profile_banner.html',
-		controller: ['$scope', '$appConfig', '$http', function($scope, $appConfig, $http){
-			$scope.$watch("user", function(newValue, oldValue){
-				$http.get($appConfig.API_URL + "/user/"+$scope.user.id+"/stat")
-				.success(function(data){
-					if(!data.error){
-						$scope.stat = data.content;
-					}
-				})
-			});
-		}]
 	}
 }]);

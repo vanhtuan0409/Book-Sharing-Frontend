@@ -81,15 +81,19 @@ angular.module('myApp.manage_book', [])
 					type = data.volumeInfo.categories[0];
 				}
 
+
+				var regex = /(<([^>]+)>)/ig;
+				var body = data.volumeInfo.description;
+				var result = body ? body.replace(regex, "") : body;
 				var book = {
 					'bookname': data.volumeInfo.title,
 					'author': data.volumeInfo.authors,
 					'url': imgUrl,
-					'description': $(data.volumeInfo.description).text(),
+					'description': result,
 					'type': type,
 					'isBook': mode
 				};
-				
+
 				var url = $config.API_URL + "/user/" + $scope.user.id + "/addBook";
 				$http.post(url, book)
 				.success(function(data){
