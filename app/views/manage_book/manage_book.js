@@ -51,7 +51,7 @@ angular.module('myApp.manage_book', [])
 		}
 
 		$scope.log = function(){
-			var bookApi = "https://www.googleapis.com/books/v1/volumes?q="+$scope.searchString+"&projection=lite&zoom=0&maxResults=10&key=AIzaSyBTV6vCk7Ns6PQ0BT_BhaqorBlf253YwHs";
+			var bookApi = "https://www.googleapis.com/books/v1/volumes?q="+$scope.searchString+"&projection=lite&zoom=0&maxResults=10&key=AIzaSyDPbxwPRGpfKSdWNJxu_yp0KR9NNIXfnhw";
 			$http.get(bookApi)
 			.success(function(data){
 				$scope.results = data.items;

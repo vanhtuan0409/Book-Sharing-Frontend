@@ -65,12 +65,12 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="book in userRecommendation | orderBy: 'bookname'">
-								<td>
+								<td ng-click="redirect(book.id);">
 									<img ng-src="{{book.url}}" alt="" class="responsive-img">
 								</td>
-								<td>{{book.bookname}}</td>
-								<td>{{book.author.join(', ')}}</td>
-								<td>{{book.type}}</td>
+								<td ng-click="redirect(book.id);">{{book.bookname}}</td>
+								<td ng-click="redirect(book.id);">{{book.author.join(', ')}}</td>
+								<td ng-click="redirect(book.id);">{{book.type}}</td>
 								<td>
 									<button class="btn red lighten-2 waves-effect" ng-click="removeBook(book.id);">
 										{{'REMOVE' | translate}}
