@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.header', ['facebook'])
+angular.module('myApp.header', [])
 .config(function(FacebookProvider){
 	FacebookProvider.init('868507116576768');
 })
@@ -15,7 +15,7 @@ angular.module('myApp.header', ['facebook'])
 				$jQueryLoader.loadDropdown(false);
 			})
 		},
-		controller: ['$scope', '$http', '$auth', '$appConfig', '$cookieStore', 'Facebook', function($scope, $http, $auth, $appConfig, $cookies, Facebook){
+		controller: ['$scope', '$http', '$auth', '$appConfig', '$cookieStore', 'Facebook', '$translate', '$cookieStore', function($scope, $http, $auth, $appConfig, $cookies, Facebook, $translate, $cookieStore){
 			// $scope.user = {name: 'asdasdas'};
 
 			if($auth.getUser()){
@@ -53,6 +53,13 @@ angular.module('myApp.header', ['facebook'])
 
 			$scope.search = function(){
 				window.location = "#/search?q="+$scope.query;
+			}
+
+			$cookieStore.get('lang') ? $scope.lang = $cookieStore.get('lang') : $scope.lang = 'ja';
+			$scope.changeLanguage = function(lang){
+				$cookieStore.put('lang', lang);
+				$scope.lang = lang;
+				$translate.use(lang);
 			}
 		}]
 	}

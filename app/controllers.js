@@ -154,18 +154,7 @@ angular.module('myApp.comment', [])
 }]);
 'use strict';
 
-angular.module('myApp.footer', [])
-
-.directive('ngFooter', function() {
-	return {
-		restrict: 'E',
-		trasclude: true,
-		templateUrl: 'views/footer/footer.html'
-	}
-});
-'use strict';
-
-angular.module('myApp.header', ['facebook'])
+angular.module('myApp.header', [])
 .config(function(FacebookProvider){
 	FacebookProvider.init('868507116576768');
 })
@@ -180,7 +169,7 @@ angular.module('myApp.header', ['facebook'])
 				$jQueryLoader.loadDropdown(false);
 			})
 		},
-		controller: ['$scope', '$http', '$auth', '$appConfig', '$cookieStore', 'Facebook', function($scope, $http, $auth, $appConfig, $cookies, Facebook){
+		controller: ['$scope', '$http', '$auth', '$appConfig', '$cookieStore', 'Facebook', '$translate', '$cookieStore', function($scope, $http, $auth, $appConfig, $cookies, Facebook, $translate, $cookieStore){
 			// $scope.user = {name: 'asdasdas'};
 
 			if($auth.getUser()){
@@ -219,9 +208,27 @@ angular.module('myApp.header', ['facebook'])
 			$scope.search = function(){
 				window.location = "#/search?q="+$scope.query;
 			}
+
+			$cookieStore.get('lang') ? $scope.lang = $cookieStore.get('lang') : $scope.lang = 'ja';
+			$scope.changeLanguage = function(lang){
+				$cookieStore.put('lang', lang);
+				$scope.lang = lang;
+				$translate.use(lang);
+			}
 		}]
 	}
 }]);
+'use strict';
+
+angular.module('myApp.footer', [])
+
+.directive('ngFooter', function() {
+	return {
+		restrict: 'E',
+		trasclude: true,
+		templateUrl: 'views/footer/footer.html'
+	}
+});
 'use strict';
 
 angular.module('myApp.home', [])
@@ -564,6 +571,20 @@ angular.module('myApp.message', [])
 	]);
 'use strict';
 
+angular.module('myApp.profile_banner', [])
+
+.directive('profileBanner', ['$jQueryLoader', '$auth', function($jQueryLoader, $auth) {
+	return {
+		restrict: 'E',
+		scope:{
+			user: "=",
+		},
+		replace: true,
+		templateUrl: 'views/profile_banner/profile_banner.html',
+	}
+}]);
+'use strict';
+
 angular.module('myApp.profile', [])
 
 .config(['$routeProvider', function($routeProvider) {
@@ -643,17 +664,42 @@ angular.module('myApp.profile', [])
 }]);
 'use strict';
 
-angular.module('myApp.profile_banner', [])
+angular.module('myApp.search', [])
 
-.directive('profileBanner', ['$jQueryLoader', '$auth', function($jQueryLoader, $auth) {
-	return {
-		restrict: 'E',
-		scope:{
-			user: "=",
-		},
-		replace: true,
-		templateUrl: 'views/profile_banner/profile_banner.html',
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/search', {
+		templateUrl: 'views/search/search.html',
+		controller: 'SearchCtrl'
+	});
+}])
+
+.controller('SearchCtrl', ['$scope', '$routeParams', '$http', '$appConfig', function($scope, $routeParams, $http, $config) {
+	$scope.loadJquery = function(){
+		$('ul.tabs').tabs();
+
+		$(".search-list tr td").click(function(){
+			document.location = "#/book";
+		})
 	}
+	$scope.loadJquery();
+
+	var query = $routeParams.q;
+	console.log($config.API_URL + '/book?where={"bookname":{"contains":"'+query+'"}}');
+
+
+	$http.get($config.API_URL + '/book?where={"bookname":{"contains":"'+query+'"}}')
+	.success(function(data){
+		if(!data.error){
+			$scope.books = data.content;
+		}
+	})
+
+	$http.get($config.API_URL + '/user?where={"name":{"contains":"'+query+'"}}')
+	.success(function(data){
+		if(!data.error){
+			$scope.peoples = data.content;
+		}
+	})
 }]);
 'use strict';
 
@@ -785,42 +831,3 @@ angular.module('myApp.lend_request', [])
 		}
 	}
 ]);
-'use strict';
-
-angular.module('myApp.search', [])
-
-.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/search', {
-		templateUrl: 'views/search/search.html',
-		controller: 'SearchCtrl'
-	});
-}])
-
-.controller('SearchCtrl', ['$scope', '$routeParams', '$http', '$appConfig', function($scope, $routeParams, $http, $config) {
-	$scope.loadJquery = function(){
-		$('ul.tabs').tabs();
-
-		$(".search-list tr td").click(function(){
-			document.location = "#/book";
-		})
-	}
-	$scope.loadJquery();
-
-	var query = $routeParams.q;
-	console.log($config.API_URL + '/book?where={"bookname":{"contains":"'+query+'"}}');
-
-
-	$http.get($config.API_URL + '/book?where={"bookname":{"contains":"'+query+'"}}')
-	.success(function(data){
-		if(!data.error){
-			$scope.books = data.content;
-		}
-	})
-
-	$http.get($config.API_URL + '/user?where={"name":{"contains":"'+query+'"}}')
-	.success(function(data){
-		if(!data.error){
-			$scope.peoples = data.content;
-		}
-	})
-}]);

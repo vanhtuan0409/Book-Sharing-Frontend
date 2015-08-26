@@ -157,7 +157,11 @@ angular.module('myApp', [
 	$translateProvider.preferredLanguage('ja');
 }])
 
-.run(['$rootScope', '$auth', function($rootScope, $auth) {
+.run(['$rootScope', '$auth', '$cookieStore', '$translate', function($rootScope, $auth, $cookieStore, $translate) {
+	if($cookieStore.get('lang')){
+		$translate.use($cookieStore.get('lang'));
+	}
+
 	$rootScope.$on('$routeChangeStart', function(event, next) {
 		if (next.access !== undefined) {
 			if (next.access.requiresLogin && !$auth.getUser()) {
