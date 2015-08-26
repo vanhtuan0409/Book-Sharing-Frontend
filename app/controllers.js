@@ -123,6 +123,48 @@ angular.module('myApp.borrow_form', [])
 }]);
 'use strict';
 
+angular.module('myApp.comment', [])
+
+.directive('ngComment', ['$jQueryLoader', function($jQueryLoader) {
+	return {
+		restrict: 'E',
+		scope: {
+            comments: '=',
+            addMessage: '&'
+        },
+		trasclude: true,
+		replace: true,
+		templateUrl: 'views/comment/comment.html',
+		link: function($scope,element,attrs){
+		},
+		controller: ['$scope', '$http', '$auth', '$appConfig', function($scope, $http, $auth, $appConfig){
+			$scope.commentMsg = '';
+			$scope.sendMsg = function(){
+				if($scope.commentMsg != ''){
+					if(!$auth.getUser()){
+						alert("Please Login!");
+						return;
+					}
+					$scope.addMessage({msg: $scope.commentMsg});
+					$scope.commentMsg = '';
+				}
+			}
+		}]
+	}
+}]);
+'use strict';
+
+angular.module('myApp.footer', [])
+
+.directive('ngFooter', function() {
+	return {
+		restrict: 'E',
+		trasclude: true,
+		templateUrl: 'views/footer/footer.html'
+	}
+});
+'use strict';
+
 angular.module('myApp.header', ['facebook'])
 .config(function(FacebookProvider){
 	FacebookProvider.init('868507116576768');
@@ -176,48 +218,6 @@ angular.module('myApp.header', ['facebook'])
 
 			$scope.search = function(){
 				window.location = "#/search?q="+$scope.query;
-			}
-		}]
-	}
-}]);
-'use strict';
-
-angular.module('myApp.footer', [])
-
-.directive('ngFooter', function() {
-	return {
-		restrict: 'E',
-		trasclude: true,
-		templateUrl: 'views/footer/footer.html'
-	}
-});
-'use strict';
-
-angular.module('myApp.comment', [])
-
-.directive('ngComment', ['$jQueryLoader', function($jQueryLoader) {
-	return {
-		restrict: 'E',
-		scope: {
-            comments: '=',
-            addMessage: '&'
-        },
-		trasclude: true,
-		replace: true,
-		templateUrl: 'views/comment/comment.html',
-		link: function($scope,element,attrs){
-		},
-		controller: ['$scope', '$http', '$auth', '$appConfig', function($scope, $http, $auth, $appConfig){
-			$scope.commentMsg = '';
-			$scope.sendMsg = function(){
-				if($scope.commentMsg != ''){
-					if(!$auth.getUser()){
-						alert("Please Login!");
-						return;
-					}
-					$scope.addMessage({msg: $scope.commentMsg});
-					$scope.commentMsg = '';
-				}
 			}
 		}]
 	}
@@ -564,6 +564,99 @@ angular.module('myApp.message', [])
 	]);
 'use strict';
 
+angular.module('myApp.profile', [])
+
+.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/profile/:id', {
+		templateUrl: 'views/profile/profile.html',
+		controller: 'ProfileCtrl'
+	});
+}])
+
+.controller('ProfileCtrl', [
+		'$scope',
+		'$routeParams',
+		'$http',
+		'$jQueryLoader',
+		'$appConfig',
+		'$auth',
+		'$rootScope',
+		function($scope, $routeParams, $http, $jQueryLoader, $appConfig, $auth) {
+
+	$scope.jLoader = $jQueryLoader;
+
+	$scope.loadJquery = function(){
+		$jQueryLoader.loadTab();
+	}
+	
+	$scope.redirect = function(bookId){
+		document.location= "#/book/"+bookId;
+	}
+
+	$scope.setBorrow = function(user, book){
+		$scope.borrowUser = user;
+		$scope.borrowBook = book;
+	}
+
+	$scope.currentUser = $auth.getUser();
+	$scope.user = {};
+
+	$scope.getUser = function(){
+		$http.get($appConfig.API_URL + "/user/" + $routeParams.id)
+		.success(function(data){
+			if(!data.error){
+				$scope.user = data.content;
+			}
+		})
+	}
+	$scope.getUser();
+
+	$scope.getMessage = function(){
+		$http.get($appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id)
+		.success(function(data){
+			if(!data.error){
+				$scope.commentList = data.content
+			}
+		})
+		.error(function(error){
+			console.log(error);
+		})
+	}
+	$scope.addMessage = function(message){
+		$http.post(
+			$appConfig.API_URL + "/user_rating",
+			{
+				'fromUser': $auth.getUser().id,
+				'toUser': $scope.user.id,
+				'message': message
+			}
+		).success(function(data){
+			if(!data.error){
+				$scope.getMessage();
+			}
+		})
+	}
+
+	$scope.getMessage();
+
+	$scope.loadJquery();
+}]);
+'use strict';
+
+angular.module('myApp.profile_banner', [])
+
+.directive('profileBanner', ['$jQueryLoader', '$auth', function($jQueryLoader, $auth) {
+	return {
+		restrict: 'E',
+		scope:{
+			user: "=",
+		},
+		replace: true,
+		templateUrl: 'views/profile_banner/profile_banner.html',
+	}
+}]);
+'use strict';
+
 angular.module('myApp.borrow_request', [])
 
 .config(['$routeProvider', function($routeProvider) {
@@ -692,99 +785,6 @@ angular.module('myApp.lend_request', [])
 		}
 	}
 ]);
-'use strict';
-
-angular.module('myApp.profile_banner', [])
-
-.directive('profileBanner', ['$jQueryLoader', '$auth', function($jQueryLoader, $auth) {
-	return {
-		restrict: 'E',
-		scope:{
-			user: "=",
-		},
-		replace: true,
-		templateUrl: 'views/profile_banner/profile_banner.html',
-	}
-}]);
-'use strict';
-
-angular.module('myApp.profile', [])
-
-.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/profile/:id', {
-		templateUrl: 'views/profile/profile.html',
-		controller: 'ProfileCtrl'
-	});
-}])
-
-.controller('ProfileCtrl', [
-		'$scope',
-		'$routeParams',
-		'$http',
-		'$jQueryLoader',
-		'$appConfig',
-		'$auth',
-		'$rootScope',
-		function($scope, $routeParams, $http, $jQueryLoader, $appConfig, $auth) {
-
-	$scope.jLoader = $jQueryLoader;
-
-	$scope.loadJquery = function(){
-		$jQueryLoader.loadTab();
-	}
-	
-	$scope.redirect = function(bookId){
-		document.location= "#/book/"+bookId;
-	}
-
-	$scope.setBorrow = function(user, book){
-		$scope.borrowUser = user;
-		$scope.borrowBook = book;
-	}
-
-	$scope.currentUser = $auth.getUser();
-	$scope.user = {};
-
-	$scope.getUser = function(){
-		$http.get($appConfig.API_URL + "/user/" + $routeParams.id)
-		.success(function(data){
-			if(!data.error){
-				$scope.user = data.content;
-			}
-		})
-	}
-	$scope.getUser();
-
-	$scope.getMessage = function(){
-		$http.get($appConfig.API_URL + "/user_rating?toUser=" + $routeParams.id)
-		.success(function(data){
-			if(!data.error){
-				$scope.commentList = data.content
-			}
-		})
-		.error(function(error){
-			console.log(error);
-		})
-	}
-	$scope.addMessage = function(message){
-		$http.post(
-			$appConfig.API_URL + "/user_rating",
-			{
-				'fromUser': $auth.getUser().id,
-				'toUser': $scope.user.id,
-				'message': message
-			}
-		).success(function(data){
-			if(!data.error){
-				$scope.getMessage();
-			}
-		})
-	}
-
-	$scope.getMessage();
-
-	$scope.loadJquery();
-}]);
 'use strict';
 
 angular.module('myApp.search', [])

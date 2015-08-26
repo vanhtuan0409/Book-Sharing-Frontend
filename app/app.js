@@ -23,12 +23,14 @@ angular.module('myApp', [
 	'myApp.services'
 ])
 
-.config(['$routeProvider', 'FacebookProvider', '$translateProvider', function($routeProvider, FacebookProvider, $translateProvider) {
+.config(['$routeProvider', 'FacebookProvider', '$translateProvider', '$httpProvider', function($routeProvider, FacebookProvider, $translateProvider, $httpProvider) {
 	$routeProvider.otherwise({
 		redirectTo: '/'
 	});
 
-	FacebookProvider.init('868507116576768');
+	$httpProvider.defaults.withCredentials = true;
+
+	FacebookProvider.init('869003383193808');
 
 	$translateProvider.translations('en', {
 		'HEADER_SEARCH_PLACEHOLDER': 'Explore Book Sharing',
