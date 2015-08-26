@@ -30,7 +30,7 @@ angular.module('myApp', [
 
 	$httpProvider.defaults.withCredentials = true;
 
-	FacebookProvider.init('869003383193808');
+	FacebookProvider.init('868507116576768');
 
 	$translateProvider.translations('en', {
 		'HEADER_SEARCH_PLACEHOLDER': 'Explore Book Sharing',
