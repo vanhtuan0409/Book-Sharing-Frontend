@@ -37,7 +37,7 @@ angular.module('myApp.services', ['ngCookies'])
 	}
 })
 .factory('$auth', ['$appConfig', '$http', '$cookieStore', function($appConfig, $http, $cookieStore){
-	var currentUser = $cookieStore.get('user');
+	var currentUser = null;
 	return {
 		isLoggedIn: function(){
 			if(currentUser !== null){
